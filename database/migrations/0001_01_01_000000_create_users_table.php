@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('role')->default('client'); // 'gestionnaire' ou 'client'
+            $table->string('phone')->nullable();       // Numéro de téléphone pour le contact
             $table->rememberToken();
             $table->timestamps();
         });

@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',  // Ajouté pour gérer le rôle (gestionnaire ou client)
+        'phone', // Ajouté pour le numéro de téléphone
     ];
 
     /**
@@ -45,5 +47,25 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // --- Relations Eloquent ---
+
+    // Un gestionnaire peut publier plusieurs maisons
+    public function houses()
+    {
+        return $this->hasMany(House::class);
+    }
+
+    // Un client peut faire plusieurs réservations
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class, 'client_id');
+    }
+
+    // Un client peut avoir plusieurs baux (locations)
+    public function leases()
+    {
+        return $this->hasMany(Lease::class, 'client_id');
     }
 }
