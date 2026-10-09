@@ -25,6 +25,16 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                     <ul class="navbar-nav align-items-center gap-3">
+                        
+                        <!-- Lien Utilisateurs (Visible uniquement pour l'administrateur) -->
+                        @if(auth()->user() && auth()->user()->role === 'admin')
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('users.*') ? 'text-info fw-bold' : 'text-white' }}" href="{{ route('users.index') }}">
+                                    <i class="bi bi-people-fill"></i> Utilisateurs
+                                </a>
+                            </li>
+                        @endif
+
                         <li class="nav-item text-white small">
                             <i class="bi bi-person-circle text-info"></i> {{ Auth::user()->name ?? 'Administrateur' }}
                         </li>

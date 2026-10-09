@@ -53,7 +53,7 @@
                             </div>
 
                             <div class="d-flex justify-content-between align-items-center mt-4">
-                                <a href="{{ route('welcome') }}" class="btn btn-outline-secondary">Retour à l'accueil</a>
+                                <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">Retour au tableau de bord</a>
                                 <button type="submit" class="btn btn-dark px-4">Publier la maison</button>
                             </div>
                         </form>
