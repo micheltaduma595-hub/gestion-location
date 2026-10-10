@@ -14,6 +14,10 @@ return new class extends Migration
         Schema::create('houses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Le gestionnaire propriétaire
+            
+            // 👇 Ajoutez cette ligne pour lier la maison au locataire
+            $table->foreignId('locataire_id')->nullable()->constrained('locataires')->onDelete('set null');
+
             $table->string('title');
             $table->text('description');
             $table->decimal('price', 10, 2);

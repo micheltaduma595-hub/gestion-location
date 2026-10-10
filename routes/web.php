@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HouseController;
-use App\Http\Controllers\TenantController;
-use App\Http\Controllers\UserController; // 1. Ajoutez cet import ici
+use App\Http\Controllers\LocataireController; // Remplacé TenantController par LocataireController
+use App\Http\Controllers\UserController;
 use App\Models\House;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -45,11 +45,15 @@ Route::middleware('auth')->group(function () {
     // Gestion des maisons (CRUD complet)
     Route::resource('houses', HouseController::class);
 
-    // Gestion des locataires / clients (CRUD complet)
-    Route::resource('tenants', TenantController::class);
+    // Gestion des locataires (CRUD complet)
+    Route::resource('locataires', LocataireController::class);
+
+    // Routes spécifiques pour l'attribution des maisons à un locataire
+    Route::get('locataires/{locataire}/attribuer', [LocataireController::class, 'attribuerMaisonForm'])->name('locataires.attribuer.form');
+    Route::post('locataires/{locataire}/attribuer', [LocataireController::class, 'attribuerMaison'])->name('locataires.attribuer');
 
     // Gestion des utilisateurs (CRUD complet pour l'administration)
-    Route::resource('users', UserController::class); // 2. Ajoutez cette route ici
+    Route::resource('users', UserController::class);
 });
 
 require __DIR__.'/auth.php';

@@ -11,18 +11,25 @@ class House extends Model
 
     protected $fillable = [
         'user_id',
+        'locataire_id', // Ajouté pour lier le locataire
         'title',
         'description',
         'price',
         'address',
         'image',
-        'status',
+        'status',       // 'status' ou 'statut' selon votre table
     ];
 
     // Une maison appartient à un gestionnaire (User)
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // Une maison appartient à un locataire (quand elle est louée)
+    public function locataire()
+    {
+        return $this->belongsTo(Locataire::class);
     }
 
     // Une maison peut avoir plusieurs réservations

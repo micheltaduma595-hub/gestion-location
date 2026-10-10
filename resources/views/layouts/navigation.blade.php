@@ -16,6 +16,16 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
+                    <!-- Lien Maisons -->
+                    <x-nav-link :href="route('houses.index')" :active="request()->routeIs('houses.*')">
+                        {{ __('Maisons') }}
+                    </x-nav-link>
+
+                    <!-- Lien Locataires -->
+                    <x-nav-link :href="route('locataires.index')" :active="request()->routeIs('locataires.*')">
+                        {{ __('Locataires') }}
+                    </x-nav-link>
+
                     <!-- Lien Utilisateurs (Visible uniquement pour l'admin) -->
                     @if(auth()->user() && auth()->user()->role === 'admin')
                         <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
@@ -76,6 +86,14 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('houses.index')" :active="request()->routeIs('houses.*')">
+                {{ __('Maisons') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('locataires.index')" :active="request()->routeIs('locataires.*')">
+                {{ __('Locataires') }}
             </x-responsive-nav-link>
 
             <!-- Lien Utilisateurs Mobile (Visible uniquement pour l'admin) -->

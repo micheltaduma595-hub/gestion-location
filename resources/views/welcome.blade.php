@@ -58,7 +58,14 @@
                     <li class="nav-item">
                         <a class="btn btn-outline-light btn-sm px-3 rounded-pill" href="{{ route('contact') }}"><i class="bi bi-envelope me-1"></i> Contact</a>
                     </li>
-                    <li class="nav-item ms-lg-3">
+                    @if (Route::has('register'))
+                        <li class="nav-item ms-lg-3">
+                            <a href="{{ route('register') }}" class="btn btn-outline-light rounded-pill px-4 fw-semibold shadow-sm">
+                                <i class="bi bi-person-plus me-1"></i> S'inscrire
+                            </a>
+                        </li>
+                    @endif
+                    <li class="nav-item">
                         <a href="{{ route('login') }}" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">
                             <i class="bi bi-box-arrow-in-right me-1"></i> Se connecter
                         </a>
@@ -83,6 +90,11 @@
                             Trouvez ou publiez des maisons facilement. Les clients peuvent choisir leur logement, contacter directement les gestionnaires et suivre leurs échéances de baux en toute tranquillité.
                         </p>
                         <div class="d-flex gap-2 flex-wrap">
+                            @if (Route::has('register'))
+                                <a href="{{ route('register') }}" class="btn btn-outline-primary rounded-pill px-4 fw-semibold shadow-sm">
+                                    <i class="bi bi-person-plus me-1"></i> S'inscrire
+                                </a>
+                            @endif
                             <a href="{{ route('login') }}" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">
                                 <i class="bi bi-box-arrow-in-right me-1"></i> Se connecter
                             </a>
