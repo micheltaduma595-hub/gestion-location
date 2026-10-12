@@ -42,6 +42,13 @@
                             </a>
                         </li>
 
+                        <!-- 👇 Lien Caisse ajouté ici -->
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('payments.*') ? 'text-info fw-bold' : 'text-white' }}" href="{{ route('payments.index') }}">
+                                <i class="bi bi-cash-stack"></i> Caisse
+                            </a>
+                        </li>
+
                         <!-- Lien Utilisateurs (Visible uniquement pour l'administrateur) -->
                         @if(auth()->user() && auth()->user()->role === 'admin')
                             <li class="nav-item">

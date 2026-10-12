@@ -2,14 +2,17 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HouseController;
-use App\Http\Controllers\LocataireController; // Remplacé TenantController par LocataireController
+use App\Http\Controllers\LocataireController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PaymentController; // 👈 Importation du contrôleur de paiement
 use App\Models\House;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    // Récupère les maisons (par exemple, celles qui sont disponibles) pour les afficher sur l'accueil
+    $houses = House::where('status', 'disponible')->latest()->get();
+    return view('welcome', compact('houses'));
 })->name('home');
 
 // Nouvelles pages séparées
@@ -54,6 +57,12 @@ Route::middleware('auth')->group(function () {
 
     // Gestion des utilisateurs (CRUD complet pour l'administration)
     Route::resource('users', UserController::class);
+
+    // 👇 Gestion complète de la Caisse (CRUD complet : index, create, store, edit, update, destroy)
+    Route::resource('payments', PaymentController::class);
+    
+    // Route spécifique pour l'impression du reçu de loyer
+    Route::get('payments/{payment}/receipt', [PaymentController::class, 'show'])->name('payments.receipt');
 });
 
 require __DIR__.'/auth.php';

@@ -28,6 +28,16 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             overflow: hidden;
         }
+        .house-card {
+            background: #ffffff;
+            color: #333;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        .house-card:hover {
+            transform: translateY(-5px);
+        }
     </style>
 </head>
 <body>
@@ -75,7 +85,7 @@
         </div>
     </nav>
 
-    <!-- Section Héro (Carte épurée avec texte et photo de maison) -->
+    <!-- Section Héro -->
     <header class="container my-5 py-4">
         <div class="row justify-content-center align-items-center">
             <div class="col-lg-10">
@@ -111,6 +121,44 @@
             </div>
         </div>
     </header>
+
+    <!-- Section Catalogue des Maisons Disponibles -->
+    <main class="container my-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold"><i class="bi bi-houses text-info me-2"></i> Nos Maisons Disponibles</h2>
+            <p class="text-white-50">Découvrez les derniers logements mis en location et trouvez celui qui vous correspond.</p>
+        </div>
+
+        <div class="row g-4">
+            @forelse($houses as $house)
+                <div class="col-md-4">
+                    <div class="house-card shadow-sm h-100 d-flex flex-column">
+                        @if($house->image)
+                            <img src="{{ asset('storage/' . $house->image) }}" alt="{{ $house->title }}" class="w-100 object-fit-cover" style="height: 220px;">
+                        @else
+                            <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80" alt="Maison par défaut" class="w-100 object-fit-cover" style="height: 220px;">
+                        @endif
+                        
+                        <div class="p-4 d-flex flex-column flex-grow-1">
+                            <h4 class="fw-bold text-dark mb-2">{{ $house->title }}</h4>
+                            <p class="text-muted small mb-3"><i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ $house->address }}</p>
+                            <div class="mt-auto d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success fs-5">{{ number_format($house->price, 2) }} $ <small class="text-muted fw-normal fs-6">/ mois</small></span>
+                                <a href="{{ route('login') }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">Louer ce bien</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="col-12 text-center py-5">
+                    <div class="p-4 bg-dark bg-opacity-50 rounded-4 d-inline-block">
+                        <i class="bi bi-house-slash fs-1 text-info mb-2 d-block"></i>
+                        <p class="text-white-50 mb-0">Aucune maison disponible pour le moment. Revenez un peu plus tard !</p>
+                    </div>
+                </div>
+            @endforelse
+        </div>
+    </main>
 
     <!-- Pied de page -->
     <footer class="text-white text-center py-4 mt-auto border-top border-secondary opacity-75">

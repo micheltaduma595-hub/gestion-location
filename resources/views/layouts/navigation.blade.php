@@ -26,6 +26,11 @@
                         {{ __('Locataires') }}
                     </x-nav-link>
 
+                    <!-- 👇 AJOUTER LE LIEN CAISSE ICI -->
+                    <x-nav-link :href="route('payments.index')" :active="request()->routeIs('payments.*')">
+                        {{ __('Caisse') }}
+                    </x-nav-link>
+
                     <!-- Lien Utilisateurs (Visible uniquement pour l'admin) -->
                     @if(auth()->user() && auth()->user()->role === 'admin')
                         <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
@@ -94,6 +99,11 @@
 
             <x-responsive-nav-link :href="route('locataires.index')" :active="request()->routeIs('locataires.*')">
                 {{ __('Locataires') }}
+            </x-responsive-nav-link>
+
+            <!-- 👇 AJOUTER AUSSI LE LIEN MOBILE ICI -->
+            <x-responsive-nav-link :href="route('payments.index')" :active="request()->routeIs('payments.*')">
+                {{ __('Caisse') }}
             </x-responsive-nav-link>
 
             <!-- Lien Utilisateurs Mobile (Visible uniquement pour l'admin) -->
