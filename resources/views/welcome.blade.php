@@ -14,18 +14,69 @@
         body {
             background-color: #f8f9fa;
         }
-        /* Section Héro Plein Écran avec image de fond et voile sombre */
+
+        /* Section Héro Plein Écran avec diaporama d'arrière-plan */
         .hero-section {
-            background: linear-gradient(rgba(11, 28, 60, 0.75), rgba(23, 56, 104, 0.75)), url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
+            position: relative;
             min-height: 80vh;
             display: flex;
             align-items: center;
-            position: relative;
             color: #fff;
             padding-top: 100px;
+            overflow: hidden;
         }
+
+        /* Conteneur des slides d'arrière-plan */
+        .hero-bg-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hero-bg-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            animation: bgSlideAnimation 18s infinite ease-in-out;
+        }
+
+        /* 3 Images différentes avec un décalage d'animation */
+        .hero-bg-slide:nth-child(1) {
+            background-image: linear-gradient(rgba(11, 28, 60, 0.75), rgba(23, 56, 104, 0.75)), url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=80');
+            animation-delay: 0s;
+        }
+
+        .hero-bg-slide:nth-child(2) {
+            background-image: linear-gradient(rgba(11, 28, 60, 0.75), rgba(23, 56, 104, 0.75)), url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80');
+            animation-delay: 6s;
+        }
+
+        .hero-bg-slide:nth-child(3) {
+            background-image: linear-gradient(rgba(11, 28, 60, 0.75), rgba(23, 56, 104, 0.75)), url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80');
+            animation-delay: 12s;
+        }
+
+        @keyframes bgSlideAnimation {
+            0% { opacity: 0; transform: scale(1); }
+            8% { opacity: 1; }
+            33% { opacity: 1; }
+            41% { opacity: 0; transform: scale(1.05); }
+            100% { opacity: 0; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
         .navbar {
             background-color: transparent !important;
             position: absolute;
@@ -34,6 +85,7 @@
             right: 0;
             z-index: 10;
         }
+
         /* Style professionnel pour les cartes de maisons */
         .house-card {
             background: #ffffff;
@@ -121,9 +173,15 @@
         </div>
     </nav>
 
-    <!-- Section Héro Plein Écran -->
+    <!-- Section Héro avec diapositive en arrière-plan -->
     <header class="hero-section">
-        <div class="container text-center py-5">
+        <div class="hero-bg-slider">
+            <div class="hero-bg-slide"></div>
+            <div class="hero-bg-slide"></div>
+            <div class="hero-bg-slide"></div>
+        </div>
+
+        <div class="container text-center py-5 hero-content">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="mb-4">
@@ -160,7 +218,12 @@
                         
                         <div class="p-4 d-flex flex-column flex-grow-1">
                             <h4 class="fw-bold text-dark mb-2 fs-5">{{ $house->title }}</h4>
-                            <p class="text-muted small mb-4"><i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ $house->address }}</p>
+                            <p class="text-muted small mb-2"><i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ $house->address }}</p>
+                            
+                            <!-- 👈 Affichage de la description détaillée (limitée pour garder l'harmonie des cartes) -->
+                            <p class="text-secondary small mb-3">
+                                {{ Str::limit($house->description, 90) }}
+                            </p>
                             
                             <div class="mt-auto d-flex justify-content-between align-items-center pt-3 border-top">
                                 <div>

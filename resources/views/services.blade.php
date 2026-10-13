@@ -16,33 +16,38 @@
         }
         .navbar { background-color: transparent !important; }
         
-        /* Style raffiné pour les cartes de services */
-        .service-card {
-            background: #ffffff;
-            color: #333;
+        /* Style des cartes articles avec images de fond et texte superposé */
+        .service-article-card {
             border-radius: 16px;
+            overflow: hidden;
             border: none;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            height: 100%;
-        }
-        .service-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
-        }
-        .icon-box {
-            width: 65px;
-            height: 65px;
-            border-radius: 14px;
+            height: 340px;
+            position: relative;
+            background-size: cover;
+            background-position: center;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.7rem;
-            margin-bottom: 1.2rem;
+            align-items: flex-end;
+        }
+
+        .service-article-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Voile sombre pour que le texte soit parfaitement lisible sur l'image */
+        .card-overlay {
+            background: linear-gradient(to top, rgba(11, 28, 60, 0.95) 25%, rgba(11, 28, 60, 0.3) 90%);
+            width: 100%;
+            padding: 2rem;
+            color: #fff;
         }
     </style>
 </head>
 <body>
+
+    <!-- Barre de navigation transparente harmonisée -->
     <nav class="navbar navbar-expand-lg navbar-dark py-3">
         <div class="container">
             <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ route('home') }}">
@@ -51,8 +56,45 @@
                 </div>
                 <span>Gestion<span class="text-info">Loyer</span></span>
             </a>
-            <div class="ms-auto">
-                <a href="{{ route('home') }}" class="btn btn-outline-light rounded-pill px-4 shadow-sm fw-semibold"><i class="bi bi-arrow-left me-1"></i> Retour à l'accueil</a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center gap-2">
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light btn-sm px-3 rounded-pill" href="{{ route('home') }}"><i class="bi bi-house-door me-1"></i> Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white active px-3" href="{{ route('services') }}"><i class="bi bi-gear me-1"></i> Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light btn-sm px-3 rounded-pill" href="{{ route('apropos') }}"><i class="bi bi-info-circle me-1"></i> À propos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light btn-sm px-3 rounded-pill" href="{{ route('contact') }}"><i class="bi bi-envelope me-1"></i> Contact</a>
+                    </li>
+
+                    @auth
+                        <li class="nav-item ms-lg-3">
+                            <a href="{{ route('dashboard') }}" class="btn btn-info rounded-pill px-4 fw-semibold text-dark shadow-sm">
+                                <i class="bi bi-speedometer2 me-1"></i> Tableau de bord
+                            </a>
+                        </li>
+                    @else
+                        @if (Route::has('register'))
+                            <li class="nav-item ms-lg-3">
+                                <a href="{{ route('register') }}" class="btn btn-outline-light rounded-pill px-4 fw-semibold shadow-sm">
+                                    <i class="bi bi-person-plus me-1"></i> S'inscrire
+                                </a>
+                            </li>
+                        @endif
+                        <li class="nav-item">
+                            <a href="{{ route('login') }}" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">
+                                <i class="bi bi-box-arrow-in-right me-1"></i> Se connecter
+                            </a>
+                        </li>
+                    @endauth
+                </ul>
             </div>
         </div>
     </nav>
@@ -67,36 +109,36 @@
         </div>
 
         <div class="row g-4 justify-content-center">
-            <!-- Service 1 -->
+            <!-- Article 1 : Publication & Choix -->
             <div class="col-md-4">
-                <div class="service-card p-4 d-flex flex-column h-100">
-                    <div class="icon-box bg-primary-subtle text-primary">
-                        <i class="bi bi-house-add"></i>
+                <div class="service-article-card" style="background-image: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80');">
+                    <div class="card-overlay">
+                        <div class="text-info mb-1"><i class="bi bi-house-add fs-4"></i></div>
+                        <h4 class="fw-bold text-white mb-2 fs-5">Publication & Choix</h4>
+                        <p class="text-white-50 small mb-0 lh-base">Les gestionnaires publient les maisons disponibles. Les clients peuvent les consulter, les vérifier et effectuer une réservation en un clic.</p>
                     </div>
-                    <h4 class="fw-bold text-dark mb-3">Publication & Choix</h4>
-                    <p class="text-secondary small lh-base mt-auto mb-0">Les gestionnaires publient les maisons disponibles. Les clients peuvent les consulter, les vérifier et effectuer une réservation en un clic.</p>
                 </div>
             </div>
 
-            <!-- Service 2 -->
+            <!-- Article 2 : Contact Direct -->
             <div class="col-md-4">
-                <div class="service-card p-4 d-flex flex-column h-100">
-                    <div class="icon-box bg-success-subtle text-success">
-                        <i class="bi bi-headset"></i>
+                <div class="service-article-card" style="background-image: url('https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=800&q=80');">
+                    <div class="card-overlay">
+                        <div class="text-success mb-1"><i class="bi bi-headset fs-4"></i></div>
+                        <h4 class="fw-bold text-white mb-2 fs-5">Contact Direct</h4>
+                        <p class="text-white-50 small mb-0 lh-base">Dès qu'un choix est effectué, le gestionnaire est averti et le client obtient immédiatement ses coordonnées (téléphone et email).</p>
                     </div>
-                    <h4 class="fw-bold text-dark mb-3">Contact Direct</h4>
-                    <p class="text-secondary small lh-base mt-auto mb-0">Dès qu'un choix est effectué, le gestionnaire est averti et le client obtient immédiatement ses coordonnées (téléphone et email).</p>
                 </div>
             </div>
 
-            <!-- Service 3 -->
+            <!-- Article 3 : Alertes d'Échéance -->
             <div class="col-md-4">
-                <div class="service-card p-4 d-flex flex-column h-100">
-                    <div class="icon-box bg-warning-subtle text-warning">
-                        <i class="bi bi-bell"></i>
+                <div class="service-article-card" style="background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80');">
+                    <div class="card-overlay">
+                        <div class="text-warning mb-1"><i class="bi bi-bell fs-4"></i></div>
+                        <h4 class="fw-bold text-white mb-2 fs-5">Alertes d'Échéance</h4>
+                        <p class="text-white-50 small mb-0 lh-base">Suivi rigoureux des paiements de loyer avec des alertes automatiques envoyées au locataire 3 jours avant et après l'échéance du bail.</p>
                     </div>
-                    <h4 class="fw-bold text-dark mb-3">Alertes d'Échéance</h4>
-                    <p class="text-secondary small lh-base mt-auto mb-0">Suivi rigoureux des paiements de loyer avec des alertes automatiques envoyées au locataire 3 jours avant et après l'échéance du bail.</p>
                 </div>
             </div>
         </div>

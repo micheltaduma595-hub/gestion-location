@@ -14,7 +14,15 @@
             display: flex;
             flex-direction: column;
         }
-        .navbar { background-color: transparent !important; }
+        /* Navbar transparente positionnée en haut */
+        .navbar {
+            background-color: transparent !important;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
         
         /* Carte de formulaire élégante */
         .contact-card {
@@ -36,7 +44,7 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
+    <!-- Barre de navigation transparente harmonisée -->
     <nav class="navbar navbar-expand-lg navbar-dark py-3">
         <div class="container">
             <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ route('home') }}">
@@ -45,17 +53,52 @@
                 </div>
                 <span>Gestion<span class="text-info">Loyer</span></span>
             </a>
-            <div class="ms-auto">
-                <a href="{{ route('home') }}" class="btn btn-outline-light rounded-pill px-4 shadow-sm fw-semibold">
-                    <i class="bi bi-arrow-left me-1"></i> Retour à l'accueil
-                </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center gap-2">
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light btn-sm px-3 rounded-pill" href="{{ route('home') }}"><i class="bi bi-house-door me-1"></i> Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light btn-sm px-3 rounded-pill" href="{{ route('services') }}"><i class="bi bi-gear me-1"></i> Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light btn-sm px-3 rounded-pill" href="{{ route('apropos') }}"><i class="bi bi-info-circle me-1"></i> À propos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white active px-3" href="{{ route('contact') }}"><i class="bi bi-envelope me-1"></i> Contact</a>
+                    </li>
+
+                    @auth
+                        <li class="nav-item ms-lg-3">
+                            <a href="{{ route('dashboard') }}" class="btn btn-info rounded-pill px-4 fw-semibold text-dark shadow-sm">
+                                <i class="bi bi-speedometer2 me-1"></i> Tableau de bord
+                            </a>
+                        </li>
+                    @else
+                        @if (Route::has('register'))
+                            <li class="nav-item ms-lg-3">
+                                <a href="{{ route('register') }}" class="btn btn-outline-light rounded-pill px-4 fw-semibold shadow-sm">
+                                    <i class="bi bi-person-plus me-1"></i> S'inscrire
+                                </a>
+                            </li>
+                        @endif
+                        <li class="nav-item">
+                            <a href="{{ route('login') }}" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">
+                                <i class="bi bi-box-arrow-in-right me-1"></i> Se connecter
+                            </a>
+                        </li>
+                    @endauth
+                </ul>
             </div>
         </div>
     </nav>
 
     <!-- Contenu Principal -->
-    <div class="container my-5 py-4 flex-grow-1">
-        <div class="text-center mb-4">
+    <div class="container my-5 py-4 flex-grow-1" style="margin-top: 50px;">
+        <div class="text-center mb-4 pt-4">
             <span class="badge bg-info text-dark px-3 py-2 rounded-pill fw-bold mb-3 shadow-sm">Support & Information</span>
             <h1 class="display-5 fw-bold text-white">Contactez-nous</h1>
             <p class="text-white-50 mx-auto mt-2" style="max-width: 600px;">

@@ -14,29 +14,48 @@
             display: flex;
             flex-direction: column;
         }
-        .navbar { background-color: transparent !important; }
-        
-        /* Carte de contenu élégante et moderne */
-        .about-card {
-            background: #ffffff;
-            color: #333;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
+        /* Navbar transparente positionnée en haut */
+        .navbar {
+            background-color: transparent !important;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
         }
-        .about-icon {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
+
+        /* Style des cartes articles avec images de fond et texte superposé */
+        .about-article-card {
+            border-radius: 16px;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 360px;
+            position: relative;
+            background-size: cover;
+            background-position: center;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            margin: 0 auto 1.5rem auto;
+            align-items: flex-end;
+        }
+
+        .about-article-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Voile sombre pour une lisibilité parfaite du texte */
+        .card-overlay {
+            background: linear-gradient(to top, rgba(11, 28, 60, 0.95) 25%, rgba(11, 28, 60, 0.3) 90%);
+            width: 100%;
+            padding: 2rem;
+            color: #fff;
         }
     </style>
 </head>
 <body>
+
+    <!-- Barre de navigation transparente harmonisée -->
     <nav class="navbar navbar-expand-lg navbar-dark py-3">
         <div class="container">
             <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ route('home') }}">
@@ -45,24 +64,89 @@
                 </div>
                 <span>Gestion<span class="text-info">Loyer</span></span>
             </a>
-            <div class="ms-auto">
-                <a href="{{ route('home') }}" class="btn btn-outline-light rounded-pill px-4 shadow-sm fw-semibold"><i class="bi bi-arrow-left me-1"></i> Retour à l'accueil</a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center gap-2">
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light btn-sm px-3 rounded-pill" href="{{ route('home') }}"><i class="bi bi-house-door me-1"></i> Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light btn-sm px-3 rounded-pill" href="{{ route('services') }}"><i class="bi bi-gear me-1"></i> Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white active px-3" href="{{ route('apropos') }}"><i class="bi bi-info-circle me-1"></i> À propos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light btn-sm px-3 rounded-pill" href="{{ route('contact') }}"><i class="bi bi-envelope me-1"></i> Contact</a>
+                    </li>
+
+                    @auth
+                        <li class="nav-item ms-lg-3">
+                            <a href="{{ route('dashboard') }}" class="btn btn-info rounded-pill px-4 fw-semibold text-dark shadow-sm">
+                                <i class="bi bi-speedometer2 me-1"></i> Tableau de bord
+                            </a>
+                        </li>
+                    @else
+                        @if (Route::has('register'))
+                            <li class="nav-item ms-lg-3">
+                                <a href="{{ route('register') }}" class="btn btn-outline-light rounded-pill px-4 fw-semibold shadow-sm">
+                                    <i class="bi bi-person-plus me-1"></i> S'inscrire
+                                </a>
+                            </li>
+                        @endif
+                        <li class="nav-item">
+                            <a href="{{ route('login') }}" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">
+                                <i class="bi bi-box-arrow-in-right me-1"></i> Se connecter
+                            </a>
+                        </li>
+                    @endauth
+                </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container my-5 py-4 flex-grow-1 d-flex align-items-center justify-content-center">
-        <div class="row justify-content-center w-100">
-            <div class="col-lg-8 col-md-10">
-                <div class="about-card p-5 text-center">
-                    <div class="about-icon bg-primary-subtle text-primary">
-                        <i class="bi bi-info-circle-fill"></i>
+    <div class="container my-5 py-4 flex-grow-1" style="margin-top: 40px;">
+        <div class="text-center mb-5 pt-4">
+            <span class="badge bg-info text-dark px-3 py-2 rounded-pill fw-bold mb-3 shadow-sm">Notre Vision</span>
+            <h1 class="display-5 fw-bold text-white">À propos de nous</h1>
+            <p class="text-white-50 mx-auto mt-2" style="max-width: 650px;">
+                Découvrez qui nous sommes et notre engagement pour révolutionner et simplifier la gestion locative immobilière.
+            </p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            <!-- Article 1 : Notre Mission -->
+            <div class="col-md-4">
+                <div class="about-article-card" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80');">
+                    <div class="card-overlay">
+                        <div class="text-info mb-1"><i class="bi bi-bullseye fs-4"></i></div>
+                        <h4 class="fw-bold text-white mb-2 fs-5">Notre Mission</h4>
+                        <p class="text-white-50 small mb-0 lh-base">Moderniser et fluidifier les relations entre propriétaires, gestionnaires et locataires grâce à des outils numériques intuitifs et automatisés.</p>
                     </div>
-                    <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fw-bold mb-3">Notre Vision</span>
-                    <h2 class="fw-bold mb-4 text-dark display-6">À propos de nous</h2>
-                    <p class="text-secondary fs-6 lh-lg mb-0 text-start px-md-4">
-                        Cette application web est conçue pour moderniser et fluidifier les relations entre propriétaires/gestionnaires immobiliers et locataires. Notre mission est d'apporter transparence, rapidité et efficacité dans la gestion locative quotidienne grâce à des outils numériques adaptés.
-                    </p>
+                </div>
+            </div>
+
+            <!-- Article 2 : Notre Expertise -->
+            <div class="col-md-4">
+                <div class="about-article-card" style="background-image: url('https://images.unsplash.com/photo-1542744094-3a31246264d0?auto=format&fit=crop&w=800&q=80');">
+                    <div class="card-overlay">
+                        <div class="text-success mb-1"><i class="bi bi-shield-check fs-4"></i></div>
+                        <h4 class="fw-bold text-white mb-2 fs-5">Transparence & Sécurité</h4>
+                        <p class="text-white-50 small mb-0 lh-base">Assurer un suivi rigoureux des baux, des paiements et des attributions de logements en toute sécurité et transparence totale.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 3 : Notre Ambition -->
+            <div class="col-md-4">
+                <div class="about-article-card" style="background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80');">
+                    <div class="card-overlay">
+                        <div class="text-warning mb-1"><i class="bi bi-rocket-takeoff fs-4"></i></div>
+                        <h4 class="fw-bold text-white mb-2 fs-5">Innovation Continue</h4>
+                        <p class="text-white-50 small mb-0 lh-base">Offrir une expérience utilisateur fluide et irréprochable, depuis la recherche d'un logement sur la page d'accueil jusqu'au tableau de bord.</p>
+                    </div>
                 </div>
             </div>
         </div>
