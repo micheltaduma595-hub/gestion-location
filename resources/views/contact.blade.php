@@ -11,11 +11,32 @@
             background: linear-gradient(135deg, #0b1c3c 0%, #173868 50%, #1e4b87 100%);
             min-height: 100vh;
             color: #fff;
+            display: flex;
+            flex-direction: column;
         }
         .navbar { background-color: transparent !important; }
+        
+        /* Carte de formulaire élégante */
+        .contact-card {
+            background: #ffffff;
+            color: #333;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        .form-control {
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            border: 1px solid #dee2e6;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+            border-color: #0d6efd;
+        }
     </style>
 </head>
 <body>
+    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark py-3">
         <div class="container">
             <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ route('home') }}">
@@ -25,33 +46,65 @@
                 <span>Gestion<span class="text-info">Loyer</span></span>
             </a>
             <div class="ms-auto">
-                <a href="{{ route('home') }}" class="btn btn-outline-light rounded-pill px-4"><i class="bi bi-arrow-left me-1"></i> Retour à l'accueil</a>
+                <a href="{{ route('home') }}" class="btn btn-outline-light rounded-pill px-4 shadow-sm fw-semibold">
+                    <i class="bi bi-arrow-left me-1"></i> Retour à l'accueil
+                </a>
             </div>
         </div>
     </nav>
 
-    <div class="container my-5 py-4">
-        <h2 class="text-center mb-4 fw-bold">Contactez-nous</h2>
+    <!-- Contenu Principal -->
+    <div class="container my-5 py-4 flex-grow-1">
+        <div class="text-center mb-4">
+            <span class="badge bg-info text-dark px-3 py-2 rounded-pill fw-bold mb-3 shadow-sm">Support & Information</span>
+            <h1 class="display-5 fw-bold text-white">Contactez-nous</h1>
+            <p class="text-white-50 mx-auto mt-2" style="max-width: 600px;">
+                Une question, une suggestion ou besoin d'assistance ? Envoyez-nous un message et nous vous répondrons dans les plus brefs délais.
+            </p>
+        </div>
+
         <div class="row justify-content-center">
-            <div class="col-md-6 bg-white text-dark p-5 rounded-4 shadow">
-                <form>
-                    <div class="mb-3">
-                        <label for="name" class="form-label fw-semibold">Nom complet</label>
-                        <input type="text" class="form-control" id="name" placeholder="Votre nom">
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label fw-semibold">Adresse Email</label>
-                        <input type="email" class="form-control" id="email" placeholder="nom@exemple.com">
-                    </div>
-                    <div class="mb-3">
-                        <label for="message" class="form-label fw-semibold">Message</label>
-                        <textarea class="form-control" id="message" rows="4" placeholder="Votre message..."></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold rounded-pill">Envoyer le message</button>
-                </form>
+            <div class="col-lg-6 col-md-8">
+                <div class="contact-card p-4 p-md-5">
+                    <form action="#" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="name" class="form-label fw-semibold text-dark">Nom complet</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-person"></i></span>
+                                <input type="text" class="form-control border-start-0" id="name" name="name" placeholder="Votre nom complet" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-semibold text-dark">Adresse Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-envelope"></i></span>
+                                <input type="email" class="form-control border-start-0" id="email" name="email" placeholder="nom@exemple.com" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="message" class="form-label fw-semibold text-dark">Message</label>
+                            <textarea class="form-control" id="message" name="message" rows="4" placeholder="Écrivez votre message ici..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-pill shadow-sm d-flex align-items-center justify-content-center gap-2">
+                            <i class="bi bi-send-fill"></i> Envoyer le message
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- Pied de page -->
+    <footer class="text-white text-center py-4 mt-auto border-top border-secondary opacity-75">
+        <div class="container">
+            <p class="mb-0 text-white-50 small">&copy; 2026 GestionLoyer - Tous droits réservés.</p>
+        </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

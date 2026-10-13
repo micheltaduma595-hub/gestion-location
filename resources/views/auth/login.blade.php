@@ -17,6 +17,18 @@
         </div>
     @endif
 
+    <!-- Message d'attention bien clair et mis en valeur -->
+    <div class="alert alert-primary border-0 shadow-sm rounded-4 p-3 mb-4 text-center">
+        <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
+            <i class="bi bi-info-circle-fill fs-5 text-primary"></i>
+            <h5 class="fw-bold text-primary mb-0">Attention / Important</h5>
+        </div>
+        <p class="small text-dark mb-0 mt-2">
+            Si vous possédez déjà un compte, veuillez vous connecter ci-dessous. <br>
+            <strong>Sinon, veuillez retourner à la page d'accueil pour créer votre compte et vous inscrire !</strong>
+        </p>
+    </div>
+
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
@@ -50,4 +62,11 @@
             </button>
         </div>
     </form>
+
+    <!-- Bouton de retour vers la page d'accueil pour s'inscrire -->
+    <div class="text-center mt-4 pt-3 border-top">
+        <a href="{{ route('home') }}" class="btn btn-outline-secondary w-100 rounded-pill py-2 fw-semibold text-decoration-none shadow-sm">
+            <i class="bi bi-arrow-left me-1"></i> Retour à l'accueil pour s'inscrire
+        </a>
+    </div>
 </x-guest-layout>

@@ -48,6 +48,9 @@ Route::middleware('auth')->group(function () {
     // Gestion des maisons (CRUD complet)
     Route::resource('houses', HouseController::class);
 
+    // 👇 Route permettant à un client connecté de choisir/réserver une maison depuis la page d'accueil
+    Route::post('/houses/{house}/choisir', [HouseController::class, 'clientChoisir'])->name('houses.client.choisir');
+
     // Gestion des locataires (CRUD complet)
     Route::resource('locataires', LocataireController::class);
 

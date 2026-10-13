@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Locataire;
 use App\Models\House;
+use App\Models\User; // 👈 Importation du modèle User
 use Illuminate\Http\Request;
 
 class LocataireController extends Controller
@@ -109,8 +110,14 @@ class LocataireController extends Controller
             'status' => 'disponible'
         ]);
 
+        // Supprime l'utilisateur associé si son e-mail correspond
+        if ($locataire->email) {
+            User::where('email', $locataire->email)->delete();
+        }
+
+        // Supprime le locataire
         $locataire->delete();
 
-        return redirect()->route('locataires.index')->with('success', 'Locataire supprimé avec succès.');
+        return redirect()->route('locataires.index')->with('success', 'Locataire et compte utilisateur associés supprimés avec succès.');
     }
 }

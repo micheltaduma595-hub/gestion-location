@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Locataire; // 👈 Importation du modèle Locataire
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -89,8 +90,12 @@ class UserController extends Controller
             return redirect()->route('users.index')->with('error', 'Vous ne pouvez pas supprimer votre propre compte.');
         }
 
+        // Supprime le locataire correspondant (par exemple via l'email ou l'ID)
+        Locataire::where('email', $user->email)->delete();
+
+        // Supprime l'utilisateur
         $user->delete();
 
-        return redirect()->route('users.index')->with('success', 'Utilisateur supprimé avec succès.');
+        return redirect()->route('users.index')->with('success', 'Utilisateur et locataire associés supprimés avec succès.');
     }
 }

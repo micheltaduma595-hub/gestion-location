@@ -12,37 +12,62 @@
     
     <style>
         body {
-            background: linear-gradient(135deg, rgba(11, 28, 60, 0.9), rgba(23, 56, 104, 0.9)), url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80');
+            background-color: #f8f9fa;
+        }
+        /* Section Héro Plein Écran avec image de fond et voile sombre */
+        .hero-section {
+            background: linear-gradient(rgba(11, 28, 60, 0.75), rgba(23, 56, 104, 0.75)), url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=80');
             background-size: cover;
             background-position: center;
-            min-height: 100vh;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            position: relative;
             color: #fff;
+            padding-top: 100px;
         }
         .navbar {
             background-color: transparent !important;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
         }
-        .hero-card {
-            background: #ffffff;
-            color: #333;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            overflow: hidden;
-        }
+        /* Style professionnel pour les cartes de maisons */
         .house-card {
             background: #ffffff;
             color: #333;
-            border-radius: 15px;
+            border-radius: 16px;
             overflow: hidden;
-            transition: transform 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .house-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        /* Hauteur fixe et homogène pour toutes les images de maisons */
+        .house-img-container {
+            height: 210px;
+            overflow: hidden;
+            background-color: #eaeaea;
+        }
+        .house-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .house-card:hover .house-img-container img {
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
 
-    <!-- Barre de navigation -->
+    <!-- Barre de navigation transparente -->
     <nav class="navbar navbar-expand-lg navbar-dark py-3">
         <div class="container">
             <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ route('home') }}">
@@ -68,92 +93,101 @@
                     <li class="nav-item">
                         <a class="btn btn-outline-light btn-sm px-3 rounded-pill" href="{{ route('contact') }}"><i class="bi bi-envelope me-1"></i> Contact</a>
                     </li>
-                    @if (Route::has('register'))
+
+                    @auth
+                        <!-- Si l'utilisateur est connecté, on affiche un lien vers son tableau de bord -->
                         <li class="nav-item ms-lg-3">
-                            <a href="{{ route('register') }}" class="btn btn-outline-light rounded-pill px-4 fw-semibold shadow-sm">
-                                <i class="bi bi-person-plus me-1"></i> S'inscrire
+                            <a href="{{ route('dashboard') }}" class="btn btn-info rounded-pill px-4 fw-semibold text-dark shadow-sm">
+                                <i class="bi bi-speedometer2 me-1"></i> Tableau de bord
                             </a>
                         </li>
-                    @endif
-                    <li class="nav-item">
-                        <a href="{{ route('login') }}" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">
-                            <i class="bi bi-box-arrow-in-right me-1"></i> Se connecter
-                        </a>
-                    </li>
+                    @else
+                        <!-- Si c'est un visiteur, on affiche Inscription et Connexion -->
+                        @if (Route::has('register'))
+                            <li class="nav-item ms-lg-3">
+                                <a href="{{ route('register') }}" class="btn btn-outline-light rounded-pill px-4 fw-semibold shadow-sm">
+                                    <i class="bi bi-person-plus me-1"></i> S'inscrire
+                                </a>
+                            </li>
+                        @endif
+                        <li class="nav-item">
+                            <a href="{{ route('login') }}" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">
+                                <i class="bi bi-box-arrow-in-right me-1"></i> Se connecter
+                            </a>
+                        </li>
+                    @endauth
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Section Héro -->
-    <header class="container my-5 py-4">
-        <div class="row justify-content-center align-items-center">
-            <div class="col-lg-10">
-                <div class="hero-card row g-0">
-                    <!-- Colonne Texte -->
-                    <div class="col-md-6 p-5 d-flex flex-column justify-content-center">
-                        <div class="mb-3">
-                            <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fw-bold">Immobilier & Location</span>
-                        </div>
-                        <h1 class="fw-bold mb-3 text-dark fs-2">Simplifiez la gestion de vos loyers</h1>
-                        <p class="text-secondary mb-4">
-                            Trouvez ou publiez des maisons facilement. Les clients peuvent choisir leur logement, contacter directement les gestionnaires et suivre leurs échéances de baux en toute tranquillité.
-                        </p>
-                        <div class="d-flex gap-2 flex-wrap">
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="btn btn-outline-primary rounded-pill px-4 fw-semibold shadow-sm">
-                                    <i class="bi bi-person-plus me-1"></i> S'inscrire
-                                </a>
-                            @endif
-                            <a href="{{ route('login') }}" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">
-                                <i class="bi bi-box-arrow-in-right me-1"></i> Se connecter
-                            </a>
-                            <a href="{{ route('services') }}" class="btn btn-outline-dark rounded-pill px-4 fw-semibold">
-                                Explorer les services
-                            </a>
-                        </div>
+    <!-- Section Héro Plein Écran -->
+    <header class="hero-section">
+        <div class="container text-center py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="mb-4">
+                        <span class="badge bg-info text-dark px-3 py-2 rounded-pill fw-bold fs-6 shadow-sm">Immobilier & Location</span>
                     </div>
-                    <!-- Colonne Image de maison -->
-                    <div class="col-md-6 position-relative">
-                        <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80" alt="Maison moderne" class="w-100 h-100 object-fit-cover" style="min-height: 380px;">
-                    </div>
+                    <h1 class="display-4 fw-bold mb-4 text-white">Simplifiez la gestion de vos loyers</h1>
+                    <p class="lead text-white-50 mx-auto" style="max-width: 700px;">
+                        Trouvez ou publiez des maisons facilement. Les clients peuvent choisir leur logement, contacter directement les gestionnaires et suivre leurs échéances de baux en toute tranquillité.
+                    </p>
                 </div>
             </div>
         </div>
     </header>
 
     <!-- Section Catalogue des Maisons Disponibles -->
-    <main class="container my-5">
+    <main class="container my-5 py-4">
         <div class="text-center mb-5">
-            <h2 class="fw-bold"><i class="bi bi-houses text-info me-2"></i> Nos Maisons Disponibles</h2>
-            <p class="text-white-50">Découvrez les derniers logements mis en location et trouvez celui qui vous correspond.</p>
+            <h2 class="fw-bold text-dark"><i class="bi bi-houses text-primary me-2"></i> Nos Maisons Disponibles</h2>
+            <p class="text-muted">Découvrez les derniers logements mis en location et trouvez celui qui vous correspond.</p>
         </div>
 
-        <div class="row g-4">
+        <div class="row g-4 justify-content-center">
             @forelse($houses as $house)
-                <div class="col-md-4">
-                    <div class="house-card shadow-sm h-100 d-flex flex-column">
-                        @if($house->image)
-                            <img src="{{ asset('storage/' . $house->image) }}" alt="{{ $house->title }}" class="w-100 object-fit-cover" style="height: 220px;">
-                        @else
-                            <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80" alt="Maison par défaut" class="w-100 object-fit-cover" style="height: 220px;">
-                        @endif
+                <div class="col-md-4 col-sm-6">
+                    <div class="house-card h-100 d-flex flex-column">
+                        <!-- Conteneur d'image avec dimensions fixes et propres -->
+                        <div class="house-img-container">
+                            @if($house->image)
+                                <img src="{{ asset('storage/' . $house->image) }}" alt="{{ $house->title }}">
+                            @else
+                                <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80" alt="Maison par défaut">
+                            @endif
+                        </div>
                         
                         <div class="p-4 d-flex flex-column flex-grow-1">
-                            <h4 class="fw-bold text-dark mb-2">{{ $house->title }}</h4>
-                            <p class="text-muted small mb-3"><i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ $house->address }}</p>
-                            <div class="mt-auto d-flex justify-content-between align-items-center">
-                                <span class="fw-bold text-success fs-5">{{ number_format($house->price, 2) }} $ <small class="text-muted fw-normal fs-6">/ mois</small></span>
-                                <a href="{{ route('login') }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">Louer ce bien</a>
+                            <h4 class="fw-bold text-dark mb-2 fs-5">{{ $house->title }}</h4>
+                            <p class="text-muted small mb-4"><i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ $house->address }}</p>
+                            
+                            <div class="mt-auto d-flex justify-content-between align-items-center pt-3 border-top">
+                                <div>
+                                    <span class="fw-bold text-success fs-5">{{ number_format($house->price, 2) }} $</span>
+                                    <small class="text-muted d-block" style="font-size: 0.75rem;">/ mois</small>
+                                </div>
+
+                                <!-- Gestion dynamique du bouton selon l'authentification -->
+                                @auth
+                                    <form action="{{ route('houses.client.choisir', $house->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-primary rounded-pill px-3 fw-semibold shadow-sm">
+                                            Choisir ce bien
+                                        </button>
+                                    </form>
+                                @else
+                                    <a href="{{ route('login') }}" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-semibold">Louer ce bien</a>
+                                @endauth
                             </div>
                         </div>
                     </div>
                 </div>
             @empty
                 <div class="col-12 text-center py-5">
-                    <div class="p-4 bg-dark bg-opacity-50 rounded-4 d-inline-block">
-                        <i class="bi bi-house-slash fs-1 text-info mb-2 d-block"></i>
-                        <p class="text-white-50 mb-0">Aucune maison disponible pour le moment. Revenez un peu plus tard !</p>
+                    <div class="p-4 bg-white shadow-sm rounded-4 d-inline-block border">
+                        <i class="bi bi-house-slash fs-1 text-muted mb-2 d-block"></i>
+                        <p class="text-muted mb-0">Aucune maison disponible pour le moment. Revenez un peu plus tard !</p>
                     </div>
                 </div>
             @endforelse
@@ -161,7 +195,7 @@
     </main>
 
     <!-- Pied de page -->
-    <footer class="text-white text-center py-4 mt-auto border-top border-secondary opacity-75">
+    <footer class="bg-dark text-white text-center py-4 mt-auto border-top">
         <div class="container">
             <p class="mb-0 text-white-50 small">&copy; 2026 GestionLoyer - Tous droits réservés.</p>
         </div>
