@@ -109,7 +109,16 @@
         <div class="row justify-content-center">
             <div class="col-lg-6 col-md-8">
                 <div class="contact-card p-4 p-md-5">
-                    <form action="#" method="POST">
+                    
+                    <!-- Alerte de succès en cas d'envoi réussi -->
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4 shadow-sm" role="alert">
+                            <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('contact.send') }}" method="POST">
                         @csrf
                         <div class="mb-3">
                             <label for="name" class="form-label fw-semibold text-dark">Nom complet</label>

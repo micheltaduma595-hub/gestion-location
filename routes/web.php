@@ -4,13 +4,14 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HouseController;
 use App\Http\Controllers\LocataireController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\PaymentController; // 👈 Importation du contrôleur de paiement
+use App\Http\Controllers\PaymentController; 
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ContactController; // 👈 Importation du contrôleur de contact
 use App\Models\House;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    // Récupère les maisons (par exemple, celles qui sont disponibles) pour les afficher sur l'accueil
     $houses = House::where('status', 'disponible')->latest()->get();
     return view('welcome', compact('houses'));
 })->name('home');
@@ -24,19 +25,14 @@ Route::get('/apropos', function () {
     return view('apropos');
 })->name('apropos');
 
-Route::get('/contact', function () {
-    return view('contact');
-})->name('contact');
+// 👇 Routes pour la page de contact et le traitement du formulaire (GET et POST)
+Route::get('/contact', [ContactController::class, 'show'])->name('contact');
+Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
-// Tableau de bord dynamique avec statistiques
-Route::get('/dashboard', function () {
-    $totalHouses = House::count();
-    $availableHouses = House::where('status', 'disponible')->count();
-    $totalTenants = User::where('role', 'client')->count();
-    $houses = House::latest()->take(5)->get();
-
-    return view('dashboard', compact('totalHouses', 'availableHouses', 'totalTenants', 'houses'));
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Tableau de bord redirigé vers le DashboardController
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 // Routes protégées par l'authentification
 Route::middleware('auth')->group(function () {
@@ -48,7 +44,7 @@ Route::middleware('auth')->group(function () {
     // Gestion des maisons (CRUD complet)
     Route::resource('houses', HouseController::class);
 
-    // 👇 Route permettant à un client connecté de choisir/réserver une maison depuis la page d'accueil
+    // Route permettant à un client connecté de choisir/réserver une maison depuis la page d'accueil
     Route::post('/houses/{house}/choisir', [HouseController::class, 'clientChoisir'])->name('houses.client.choisir');
 
     // Gestion des locataires (CRUD complet)
@@ -61,7 +57,7 @@ Route::middleware('auth')->group(function () {
     // Gestion des utilisateurs (CRUD complet pour l'administration)
     Route::resource('users', UserController::class);
 
-    // 👇 Gestion complète de la Caisse (CRUD complet : index, create, store, edit, update, destroy)
+    // Gestion complète de la Caisse
     Route::resource('payments', PaymentController::class);
     
     // Route spécifique pour l'impression du reçu de loyer
