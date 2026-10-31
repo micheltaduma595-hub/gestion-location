@@ -22,52 +22,63 @@
             <!-- Cartes de statistiques -->
             <div class="row g-4 mb-4">
                 <div class="col-md-4">
-                    <div class="card border-0 shadow-sm rounded-4 bg-primary text-white">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="text-uppercase small fw-bold opacity-75">Total Maisons</h6>
-                                    <h2 class="fw-bold mb-0">{{ $totalHouses ?? 0 }}</h2>
+                    <a href="{{ route('houses.index') }}" class="text-decoration-none d-block h-100" aria-label="Voir toutes les maisons">
+                        <div class="card border-0 shadow-sm rounded-4 bg-primary text-white h-100">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-uppercase small fw-bold opacity-75">Total Maisons</h6>
+                                        <h2 class="fw-bold mb-0">{{ $totalHouses ?? 0 }}</h2>
+                                    </div>
+                                    <div class="fs-1 opacity-50"><i class="bi bi-houses"></i></div>
                                 </div>
-                                <div class="fs-1 opacity-50"><i class="bi bi-houses"></i></div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-md-4">
-                    <div class="card border-0 shadow-sm rounded-4 bg-success text-white">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="text-uppercase small fw-bold opacity-75">Disponibles</h6>
-                                    <h2 class="fw-bold mb-0">{{ $availableHouses ?? 0 }}</h2>
+                    <a href="{{ route('houses.index') }}" class="text-decoration-none d-block h-100" aria-label="Voir les maisons disponibles">
+                        <div class="card border-0 shadow-sm rounded-4 bg-success text-white h-100">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-uppercase small fw-bold opacity-75">Disponibles</h6>
+                                        <h2 class="fw-bold mb-0">{{ $availableHouses ?? 0 }}</h2>
+                                    </div>
+                                    <div class="fs-1 opacity-50"><i class="bi bi-house-check"></i></div>
                                 </div>
-                                <div class="fs-1 opacity-50"><i class="bi bi-house-check"></i></div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-md-4">
-                    <div class="card border-0 shadow-sm rounded-4 bg-warning text-dark">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="text-uppercase small fw-bold opacity-75">Locataires</h6>
-                                    <h2 class="fw-bold mb-0">{{ $totalTenants ?? 0 }}</h2>
+                    <a href="{{ route('locataires.index') }}" class="text-decoration-none d-block h-100" aria-label="Voir tous les locataires">
+                        <div class="card border-0 shadow-sm rounded-4 bg-warning text-dark h-100">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-uppercase small fw-bold opacity-75">Locataires</h6>
+                                        <h2 class="fw-bold mb-0">{{ $totalTenants ?? 0 }}</h2>
+                                    </div>
+                                    <div class="fs-1 opacity-50"><i class="bi bi-people"></i></div>
                                 </div>
-                                <div class="fs-1 opacity-50"><i class="bi bi-people"></i></div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
 
             <!-- Section de la liste des maisons -->
             <div class="card border-0 shadow-sm rounded-4">
                 <div class="card-body p-4">
-                    <h5 class="fw-bold mb-3 text-secondary">
-                        <i class="bi bi-house-door"></i> Vos dernières maisons publiées
-                    </h5>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0 text-secondary">
+                            <i class="bi bi-house-door"></i> Vos dernières maisons publiées
+                        </h5>
+                        <a href="{{ route('houses.index') }}" class="btn btn-outline-primary btn-sm">
+                            Voir toutes les maisons <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
 
                     @if(isset($houses) && $houses->count() > 0)
                         <div class="table-responsive">

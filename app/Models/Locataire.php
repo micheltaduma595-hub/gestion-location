@@ -24,4 +24,9 @@ class Locataire extends Model
     {
         return $this->hasMany(House::class, 'locataire_id');
     }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
 }

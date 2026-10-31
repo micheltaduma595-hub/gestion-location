@@ -36,7 +36,11 @@
             <div class="row border-bottom pb-4 mb-4 align-items-center">
                 <div class="col-6">
                     <h3 class="fw-bold text-dark mb-0">
-                        <i class="bi bi-house-door-fill text-info"></i> Gestion<span class="text-info">Loyer</span>
+                        @if($siteLogo)
+                            <img src="{{ asset('storage/' . $siteLogo) }}" alt="Logo du site" style="max-width: 210px; max-height: 48px; object-fit: contain;">
+                        @else
+                            <i class="bi bi-house-door-fill text-info"></i> Gestion<span class="text-info">Loyer</span>
+                        @endif
                     </h3>
                     <p class="text-muted small mb-0">Quittance de Loyer Officielle</p>
                 </div>

@@ -67,7 +67,7 @@ class LocataireController extends Controller
         $house = House::findOrFail($request->house_id);
         $house->update([
             'locataire_id' => $locataire->id,
-            'status' => 'louée' // Met à jour le statut de la maison
+            'status' => 'louee',
         ]);
 
         return redirect()->route('locataires.index')->with('success', 'Maison attribuée au locataire avec succès.');

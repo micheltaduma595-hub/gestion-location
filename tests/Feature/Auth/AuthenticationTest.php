@@ -30,6 +30,41 @@ class AuthenticationTest extends TestCase
         $response->assertRedirect(route('dashboard', absolute: false));
     }
 
+    public function test_clients_are_sent_to_their_personal_dashboard_after_login(): void
+    {
+        $client = User::factory()->create(['role' => 'client']);
+
+        $this->get(route('houses.index'))
+            ->assertRedirect(route('login'));
+
+        $response = $this->post('/login', [
+            'email' => $client->email,
+            'password' => 'password',
+        ]);
+
+        $response->assertRedirect(route('dashboard', absolute: false));
+        $this->get(route('dashboard'))
+            ->assertOk()
+            ->assertSee('Mon espace client')
+            ->assertSee($client->email)
+            ->assertDontSee('Ajouter une maison');
+    }
+
+    public function test_managers_keep_their_intended_destination_after_login(): void
+    {
+        $manager = User::factory()->create(['role' => 'gestionnaire']);
+
+        $this->get(route('houses.index'))
+            ->assertRedirect(route('login'));
+
+        $response = $this->post('/login', [
+            'email' => $manager->email,
+            'password' => 'password',
+        ]);
+
+        $response->assertRedirect(route('houses.index', absolute: false));
+    }
+
     public function test_users_can_not_authenticate_with_invalid_password(): void
     {
         $user = User::factory()->create();

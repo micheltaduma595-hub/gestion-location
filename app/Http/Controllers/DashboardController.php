@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\House;
+use App\Models\Locataire;
 use App\Models\User;
 use App\Models\Contact;
 
@@ -15,8 +16,20 @@ class DashboardController extends Controller
 
         // 1. Si c'est un client ou un locataire -> Espace personnel
         if ($user->role === 'client' || $user->role === 'locataire') {
-            $house = $user->house ?? null;
-            return view('client.dashboard', compact('house'));
+            $reservations = $user->reservations()->with('house')->latest()->get();
+            $leases = $user->leases()->with('house')->latest()->get();
+            $locataire = Locataire::where('email', $user->email)->first();
+            $assignedHouses = $locataire
+                ? $locataire->maisons()
+                    ->whereNotIn('id', $leases->pluck('house_id'))
+                    ->latest()
+                    ->get()
+                : collect();
+            $payments = $locataire
+                ? $locataire->payments()->with('house')->latest()->get()
+                : collect();
+
+            return view('client.dashboard', compact('reservations', 'leases', 'assignedHouses', 'payments'));
         }
 
         // 2. Si c'est l'administrateur -> Redirection directe vers la gestion des utilisateurs

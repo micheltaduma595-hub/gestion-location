@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PaymentController; 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ContactController; // 👈 Importation du contrôleur de contact
+use App\Http\Controllers\SiteLogoController;
 use App\Models\House;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,9 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 // Routes protégées par l'authentification
 Route::middleware('auth')->group(function () {
+    Route::get('/settings/logo', [SiteLogoController::class, 'edit'])->name('site-logo.edit');
+    Route::post('/settings/logo', [SiteLogoController::class, 'update'])->name('site-logo.update');
+
     // Gestion du profil utilisateur
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

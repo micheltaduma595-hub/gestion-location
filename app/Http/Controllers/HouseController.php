@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\House;
-use App\Models\Locataire; // 👈 Importation du modèle Locataire pour la liaison
+use App\Models\Locataire;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -35,8 +35,13 @@ class HouseController extends Controller
         ]);
 
         $imagePath = null;
+        
+        // Vérification ultra-sécurisée : on s' assure que le fichier est présent et valide
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('houses', 'public');
+            $file = $request->file('image');
+            if ($file && $file->isValid()) {
+                $imagePath = $file->store('houses', 'public');
+            }
         }
 
         House::create([
@@ -73,15 +78,20 @@ class HouseController extends Controller
             'price' => 'required|numeric',
             'address' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'required|string|in:disponible,louée',
+            'status' => 'required|string|in:disponible,louee',
         ]);
 
+        $imagePath = $house->image;
+
         if ($request->hasFile('image')) {
-            // Supprimer l'ancienne image si elle existe
-            if ($house->image) {
-                Storage::disk('public')->delete($house->image);
+            $file = $request->file('image');
+            if ($file && $file->isValid()) {
+                // Supprimer l'ancienne image si elle existe
+                if ($house->image) {
+                    Storage::disk('public')->delete($house->image);
+                }
+                $imagePath = $file->store('houses', 'public');
             }
-            $house->image = $request->file('image')->store('houses', 'public');
         }
 
         $house->update([
@@ -89,6 +99,7 @@ class HouseController extends Controller
             'description' => $request->description,
             'price' => $request->price,
             'address' => $request->address,
+            'image' => $imagePath,
             'status' => $request->status,
         ]);
 
@@ -107,20 +118,17 @@ class HouseController extends Controller
         return redirect()->route('dashboard')->with('success', 'Maison supprimée avec succès !');
     }
 
-    // 👇 Permet à un client connecté de choisir une maison depuis l'accueil
+    // Permet à un client connecté de choisir une maison depuis l'accueil
     public function clientChoisir(House $house)
     {
         $user = Auth::user();
 
-        // Vérifier si la maison est bien disponible
         if ($house->status !== 'disponible') {
             return redirect()->back()->with('error', 'Désolé, cette maison n\'est plus disponible.');
         }
 
-        // Trouver le locataire correspondant via l'e-mail de l'utilisateur connecté
         $locataire = Locataire::where('email', $user->email)->first();
 
-        // S'il n'existe pas encore par sécurité, on le crée à la volée
         if (!$locataire) {
             $locataire = Locataire::create([
                 'nom' => $user->name,
@@ -131,10 +139,9 @@ class HouseController extends Controller
             ]);
         }
 
-        // Attribuer la maison au locataire et passer son statut à 'louée'
         $house->update([
             'locataire_id' => $locataire->id,
-            'status' => 'louée',
+            'status' => 'louee',
         ]);
 
         return redirect()->route('dashboard')->with('success', 'Félicitations ! Vous avez choisi cette maison avec succès.');

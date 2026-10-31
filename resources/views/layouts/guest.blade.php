@@ -26,6 +26,12 @@
                 border-radius: 20px;
                 box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             }
+            .site-brand-logo {
+                width: 48px;
+                height: 48px;
+                object-fit: cover;
+                border-radius: 0.5rem;
+            }
         </style>
     </head>
     <body>
@@ -34,10 +40,14 @@
                 <div class="col-md-5">
                     <div class="text-center mb-4">
                         <a href="{{ route('home') }}" class="text-decoration-none fw-bold fs-3 text-white d-inline-flex align-items-center gap-2">
-                            <div class="bg-primary text-white p-2 rounded-3 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
-                                <i class="bi bi-house-door-fill fs-4"></i>
-                            </div>
-                            <span>Gestion<span class="text-info">Loyer</span></span>
+                            @if($siteLogo)
+                                <img src="{{ asset('storage/' . $siteLogo) }}" alt="Logo du site" class="site-brand-logo">
+                            @else
+                                <div class="bg-primary text-white p-2 rounded-3 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                                    <i class="bi bi-house-door-fill fs-4"></i>
+                                </div>
+                                <span>Gestion<span class="text-info">Loyer</span></span>
+                            @endif
                         </a>
                     </div>
 
