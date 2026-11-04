@@ -58,13 +58,33 @@ class ClientDashboardTest extends TestCase
         $this->actingAs($client)
             ->get(route('dashboard'))
             ->assertOk()
+            ->assertSee('Mes informations')
+            ->assertSee('Adresse e-mail :')
+            ->assertDontSee('Mes réservations')
+            ->assertDontSee('Mes locations')
+            ->assertDontSee('Mon rapport de paiements');
+
+        $this->get(route('client.dashboard.section', 'reservations'))
+            ->assertOk()
+            ->assertSee('Mes réservations')
+            ->assertDontSee('Mes informations')
+            ->assertDontSee('Mes locations');
+
+        $this->get(route('client.dashboard.section', 'locations'))
+            ->assertOk()
             ->assertSee('Mes locations')
             ->assertSee('LUX1')
             ->assertSee('Attribué par votre gestionnaire')
             ->assertSee('Louée')
+            ->assertDontSee('Mon rapport de paiements')
+            ->assertDontSee('Octobre 2026');
+
+        $this->get(route('client.dashboard.section', 'paiements'))
+            ->assertOk()
             ->assertSee('Mon rapport de paiements')
             ->assertSee('Octobre 2026')
             ->assertSee('REC-20261029-1234')
-            ->assertSee('454.00 $');
+            ->assertSee('454.00 $')
+            ->assertDontSee('Mes locations');
     }
 }

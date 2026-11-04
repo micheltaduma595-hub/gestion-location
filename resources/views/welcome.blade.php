@@ -189,11 +189,11 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="mb-4">
-                        <span class="badge bg-info text-dark px-3 py-2 rounded-pill fw-bold fs-6 shadow-sm">Immobilier & Location</span>
+                        <span class="badge bg-info text-dark px-3 py-2 rounded-pill fw-bold fs-6 shadow-sm">L’immobilier, en toute confiance</span>
                     </div>
-                    <h1 class="display-4 fw-bold mb-4 text-white">Simplifiez la gestion de vos loyers</h1>
+                    <h1 class="display-4 fw-bold mb-4 text-white">Le bon logement peut changer votre quotidien.</h1>
                     <p class="lead text-white-50 mx-auto" style="max-width: 700px;">
-                        Trouvez ou publiez des maisons facilement. Les clients peuvent choisir leur logement, contacter directement les gestionnaires et suivre leurs échéances de baux en toute tranquillité.
+                        À la recherche d’un endroit à appeler chez vous, ou prêt à louer et gérer vos biens plus simplement ? GestionLoyer rapproche locataires et gestionnaires, du premier contact au suivi des loyers.
                     </p>
                 </div>
             </div>
@@ -204,7 +204,7 @@
     <main class="container my-5 py-4">
         <div class="text-center mb-5">
             <h2 class="fw-bold text-dark"><i class="bi bi-houses text-primary me-2"></i> Nos Maisons Disponibles</h2>
-            <p class="text-muted">Découvrez les derniers logements mis en location et trouvez celui qui vous correspond.</p>
+            <p class="text-muted">Chaque maison est une nouvelle histoire à commencer. Découvrez les logements disponibles et trouvez celui qui vous ressemble.</p>
         </div>
 
         <div class="row g-4 justify-content-center">

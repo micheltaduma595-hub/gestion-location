@@ -107,6 +107,11 @@
                                     <i class="bi bi-cash-stack me-2"></i> Caisse
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('annual-report.*') ? 'active fw-bold' : '' }}" href="{{ route('annual-report.index') }}" @if(request()->routeIs('annual-report.*')) aria-current="page" @endif>
+                                    <i class="bi bi-calendar2-range me-2"></i> Registre annuel
+                                </a>
+                            </li>
                         @endif
 
                         @if(auth()->user() && auth()->user()->role === 'admin')
@@ -118,6 +123,11 @@
                         @endif
 
                         @if(auth()->user() && in_array(auth()->user()->role, ['admin', 'gestionnaire'], true))
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('site-page-images.*') ? 'active fw-bold' : '' }}" href="{{ route('site-page-images.edit') }}" @if(request()->routeIs('site-page-images.*')) aria-current="page" @endif>
+                                    <i class="bi bi-images me-2"></i> Images des pages
+                                </a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('site-logo.*') ? 'active fw-bold' : '' }}" href="{{ route('site-logo.edit') }}" @if(request()->routeIs('site-logo.*')) aria-current="page" @endif>
                                     <i class="bi bi-image me-2"></i> Logo du site

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mon espace client - GestionLoyer</title>
+    <title>{{ $sections[$section] }} - GestionLoyer</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
@@ -14,6 +14,21 @@
                 <i class="bi bi-house-door-fill text-info me-2"></i>Gestion<span class="text-info">Loyer</span>
             </a>
             <div class="d-flex align-items-center gap-3">
+                <div class="dropdown">
+                    <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ $sections[$section] }}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        @foreach($sections as $key => $label)
+                            <li>
+                                <a class="dropdown-item {{ $section === $key ? 'active' : '' }}"
+                                   href="{{ $key === 'informations' ? route('dashboard') : route('client.dashboard.section', $key) }}">
+                                    {{ $label }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
                 <a href="{{ route('home') }}" class="btn btn-outline-light btn-sm">Voir les logements</a>
                 <form action="{{ route('logout') }}" method="POST" class="m-0">
                     @csrf
@@ -26,9 +41,10 @@
     <main class="container py-5">
         <div class="mb-4">
             <h1 class="h2 fw-bold">Mon espace client</h1>
-            <p class="text-muted mb-0">Bonjour {{ auth()->user()->name }}, retrouvez ici vos informations et le suivi de vos demandes.</p>
+            <p class="text-muted mb-0">Bonjour {{ auth()->user()->name }}.</p>
         </div>
 
+        @if($section === 'informations')
         <section class="card border-0 shadow-sm rounded-4 mb-4">
             <div class="card-body p-4">
                 <h2 class="h5 fw-bold mb-3"><i class="bi bi-person-circle text-primary me-2"></i>Mes informations</h2>
@@ -41,7 +57,9 @@
                 </div>
             </div>
         </section>
+        @endif
 
+        @if($section === 'reservations')
         <section class="card border-0 shadow-sm rounded-4 mb-4">
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -66,7 +84,9 @@
                 @endforelse
             </div>
         </section>
+        @endif
 
+        @if($section === 'locations')
         <section class="card border-0 shadow-sm rounded-4">
             <div class="card-body p-4">
                 <h2 class="h5 fw-bold mb-3"><i class="bi bi-file-earmark-text text-primary me-2"></i>Mes locations</h2>
@@ -102,7 +122,9 @@
                 @endif
             </div>
         </section>
+        @endif
 
+        @if($section === 'paiements')
         <section class="card border-0 shadow-sm rounded-4 mt-4">
             <div class="card-body p-4">
                 <h2 class="h5 fw-bold mb-3"><i class="bi bi-receipt text-primary me-2"></i>Mon rapport de paiements</h2>
@@ -123,6 +145,8 @@
                 @endforelse
             </div>
         </section>
+        @endif
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

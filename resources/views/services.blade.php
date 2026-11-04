@@ -115,7 +115,7 @@
         <div class="row g-4 justify-content-center">
             <!-- Article 1 : Publication & Choix -->
             <div class="col-md-4">
-                <div class="service-article-card" style="background-image: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80');">
+                <div class="service-article-card" style="background-image: url('{{ $serviceImages['publication']['url'] }}');">
                     <div class="card-overlay">
                         <div class="text-info mb-1"><i class="bi bi-house-add fs-4"></i></div>
                         <h4 class="fw-bold text-white mb-2 fs-5">Publication & Choix</h4>
@@ -126,7 +126,7 @@
 
             <!-- Article 2 : Contact Direct -->
             <div class="col-md-4">
-                <div class="service-article-card" style="background-image: url('https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=800&q=80');">
+                <div class="service-article-card" style="background-image: url('{{ $serviceImages['contact']['url'] }}');">
                     <div class="card-overlay">
                         <div class="text-success mb-1"><i class="bi bi-headset fs-4"></i></div>
                         <h4 class="fw-bold text-white mb-2 fs-5">Contact Direct</h4>
@@ -137,7 +137,7 @@
 
             <!-- Article 3 : Alertes d'Échéance -->
             <div class="col-md-4">
-                <div class="service-article-card" style="background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80');">
+                <div class="service-article-card" style="background-image: url('{{ $serviceImages['alertes']['url'] }}');">
                     <div class="card-overlay">
                         <div class="text-warning mb-1"><i class="bi bi-bell fs-4"></i></div>
                         <h4 class="fw-bold text-white mb-2 fs-5">Alertes d'Échéance</h4>

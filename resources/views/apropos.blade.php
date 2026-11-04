@@ -123,7 +123,7 @@
         <div class="row g-4 justify-content-center">
             <!-- Article 1 : Notre Mission -->
             <div class="col-md-4">
-                <div class="about-article-card" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80');">
+                <div class="about-article-card" style="background-image: url('{{ $aboutImages['mission']['url'] }}');">
                     <div class="card-overlay">
                         <div class="text-info mb-1"><i class="bi bi-bullseye fs-4"></i></div>
                         <h4 class="fw-bold text-white mb-2 fs-5">Notre Mission</h4>
@@ -134,7 +134,7 @@
 
             <!-- Article 2 : Notre Expertise -->
             <div class="col-md-4">
-                <div class="about-article-card" style="background-image: url('https://images.unsplash.com/photo-1542744094-3a31246264d0?auto=format&fit=crop&w=800&q=80');">
+                <div class="about-article-card" style="background-image: url('{{ $aboutImages['securite']['url'] }}');">
                     <div class="card-overlay">
                         <div class="text-success mb-1"><i class="bi bi-shield-check fs-4"></i></div>
                         <h4 class="fw-bold text-white mb-2 fs-5">Transparence & Sécurité</h4>
@@ -145,7 +145,7 @@
 
             <!-- Article 3 : Notre Ambition -->
             <div class="col-md-4">
-                <div class="about-article-card" style="background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80');">
+                <div class="about-article-card" style="background-image: url('{{ $aboutImages['innovation']['url'] }}');">
                     <div class="card-overlay">
                         <div class="text-warning mb-1"><i class="bi bi-rocket-takeoff fs-4"></i></div>
                         <h4 class="fw-bold text-white mb-2 fs-5">Innovation Continue</h4>

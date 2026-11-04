@@ -6,8 +6,11 @@ use App\Http\Controllers\LocataireController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PaymentController; 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FinancialActivityController;
 use App\Http\Controllers\ContactController; // 👈 Importation du contrôleur de contact
 use App\Http\Controllers\SiteLogoController;
+use App\Http\Controllers\SitePageImageController;
+use App\Support\SitePageImages;
 use App\Models\House;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -19,11 +22,11 @@ Route::get('/', function () {
 
 // Nouvelles pages séparées
 Route::get('/services', function () {
-    return view('services');
+    return view('services', ['serviceImages' => SitePageImages::forPage('services')]);
 })->name('services');
 
 Route::get('/apropos', function () {
-    return view('apropos');
+    return view('apropos', ['aboutImages' => SitePageImages::forPage('apropos')]);
 })->name('apropos');
 
 // 👇 Routes pour la page de contact et le traitement du formulaire (GET et POST)
@@ -34,11 +37,20 @@ Route::post('/contact', [ContactController::class, 'send'])->name('contact.send'
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+Route::get('/dashboard/{section}', [DashboardController::class, 'index'])
+    ->whereIn('section', ['reservations', 'locations', 'paiements'])
+    ->middleware(['auth', 'verified'])
+    ->name('client.dashboard.section');
 
 // Routes protégées par l'authentification
 Route::middleware('auth')->group(function () {
+    Route::get('/annual-report', [FinancialActivityController::class, 'index'])->name('annual-report.index');
+    Route::post('/annual-report', [FinancialActivityController::class, 'store'])->name('annual-report.store');
+
     Route::get('/settings/logo', [SiteLogoController::class, 'edit'])->name('site-logo.edit');
     Route::post('/settings/logo', [SiteLogoController::class, 'update'])->name('site-logo.update');
+    Route::get('/settings/page-images', [SitePageImageController::class, 'edit'])->name('site-page-images.edit');
+    Route::post('/settings/page-images', [SitePageImageController::class, 'update'])->name('site-page-images.update');
 
     // Gestion du profil utilisateur
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
