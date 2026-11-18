@@ -9,6 +9,14 @@ class Lease extends Model
 {
     use HasFactory;
 
+    protected function casts(): array
+    {
+        return [
+            'start_date' => 'date',
+            'end_date' => 'date',
+        ];
+    }
+
     protected $fillable = [
         'house_id',
         'client_id',

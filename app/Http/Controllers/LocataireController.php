@@ -50,7 +50,9 @@ class LocataireController extends Controller
     public function attribuerMaisonForm(Locataire $locataire)
     {
         // Récupère uniquement les maisons qui sont disponibles
-        $maisonsDisponibles = House::where('status', 'disponible')->get();
+        $maisonsDisponibles = House::whereNull('locataire_id')
+            ->whereDoesntHave('leases', fn ($query) => $query->where('status', 'actif'))
+            ->get();
         return view('locataires.attribuer', compact('locataire', 'maisonsDisponibles'));
     }
 
@@ -65,10 +67,14 @@ class LocataireController extends Controller
 
         // Mettre à jour la maison sélectionnée
         $house = House::findOrFail($request->house_id);
+        if ($house->isOccupied()) {
+            return back()->withErrors(['house_id' => 'Cette maison est déjà occupée.'])->withInput();
+        }
+
         $house->update([
             'locataire_id' => $locataire->id,
-            'status' => 'louee',
         ]);
+        $house->syncOccupancyStatus();
 
         return redirect()->route('locataires.index')->with('success', 'Maison attribuée au locataire avec succès.');
     }
@@ -105,10 +111,10 @@ class LocataireController extends Controller
     public function destroy(Locataire $locataire)
     {
         // Libérer les maisons associées avant de supprimer le locataire
-        House::where('locataire_id', $locataire->id)->update([
-            'locataire_id' => null,
-            'status' => 'disponible'
-        ]);
+        House::where('locataire_id', $locataire->id)->get()->each(function (House $house): void {
+            $house->update(['locataire_id' => null]);
+            $house->syncOccupancyStatus();
+        });
 
         // Supprime l'utilisateur associé si son e-mail correspond
         if ($locataire->email) {

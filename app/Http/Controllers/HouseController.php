@@ -13,7 +13,11 @@ class HouseController extends Controller
     // Afficher toutes les maisons disponibles sur la page d'accueil ou catalogue
     public function index()
     {
-        $houses = House::with('user')->where('status', 'disponible')->latest()->get();
+        $houses = House::with('user')
+            ->whereNull('locataire_id')
+            ->whereDoesntHave('leases', fn ($query) => $query->where('status', 'actif'))
+            ->latest()
+            ->get();
         return view('welcome', compact('houses')); 
     }
 
@@ -78,7 +82,6 @@ class HouseController extends Controller
             'price' => 'required|numeric',
             'address' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'required|string|in:disponible,louee',
         ]);
 
         $imagePath = $house->image;
@@ -100,8 +103,8 @@ class HouseController extends Controller
             'price' => $request->price,
             'address' => $request->address,
             'image' => $imagePath,
-            'status' => $request->status,
         ]);
+        $house->syncOccupancyStatus();
 
         return redirect()->route('dashboard')->with('success', 'Maison mise à jour avec succès !');
     }
@@ -123,7 +126,7 @@ class HouseController extends Controller
     {
         $user = Auth::user();
 
-        if ($house->status !== 'disponible') {
+        if ($house->isOccupied()) {
             return redirect()->back()->with('error', 'Désolé, cette maison n\'est plus disponible.');
         }
 
@@ -141,8 +144,8 @@ class HouseController extends Controller
 
         $house->update([
             'locataire_id' => $locataire->id,
-            'status' => 'louee',
         ]);
+        $house->syncOccupancyStatus();
 
         return redirect()->route('dashboard')->with('success', 'Félicitations ! Vous avez choisi cette maison avec succès.');
     }

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -23,9 +24,17 @@ class RegistrationTest extends TestCase
             'email' => 'test@example.com',
             'password' => 'password',
             'password_confirmation' => 'password',
+            'role' => User::ROLE_ADMIN,
         ]);
 
         $this->assertAuthenticated();
         $response->assertRedirect(route('dashboard', absolute: false));
+
+        $user = User::where('email', 'test@example.com')->firstOrFail();
+        $this->assertSame(User::ROLE_TENANT, $user->role);
+        $this->assertDatabaseHas('locataires', [
+            'email' => $user->email,
+            'nom' => $user->name,
+        ]);
     }
 }

@@ -57,3 +57,23 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Configuration des e-mails
+
+Le formulaire de contact enregistre les messages dans la base de données et envoie une notification à l’adresse `MAIL_CONTACT_ADDRESS`. L’application utilise le système mail de Laravel ; il n’est pas nécessaire de copier les fichiers PHPMailer.
+
+Pour utiliser Gmail, configurez les variables suivantes dans votre fichier `.env` (ne publiez jamais ce fichier) :
+
+```dotenv
+MAIL_MAILER=smtp
+MAIL_SCHEME=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=votre-adresse@gmail.com
+MAIL_PASSWORD="votre-mot-de-passe-d-application"
+MAIL_FROM_ADDRESS=votre-adresse@gmail.com
+MAIL_FROM_NAME="${APP_NAME}"
+MAIL_CONTACT_ADDRESS=adresse-qui-recoit-les-messages@gmail.com
+```
+
+`MAIL_PASSWORD` doit être un mot de passe d’application Google, généré après activation de la validation en deux étapes, et non le mot de passe habituel du compte. L’adresse `MAIL_FROM_ADDRESS` doit correspondre au compte Gmail authentifié. Après modification du `.env`, exécutez `php artisan config:clear`. En local, le réglage `MAIL_MAILER=log` écrit les e-mails dans `storage/logs/laravel.log` au lieu de les envoyer.

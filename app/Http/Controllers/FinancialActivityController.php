@@ -10,7 +10,7 @@ class FinancialActivityController extends Controller
 {
     public function index(Request $request)
     {
-        $this->authorizeManager();
+        $this->authorizeManagerOrAdmin();
 
         $validated = $request->validate([
             'year' => 'nullable|integer|min:2000|max:2100',
@@ -65,7 +65,7 @@ class FinancialActivityController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorizeManager();
+        $this->authorizeManagerOrAdmin();
 
         $validated = $request->validate([
             'type' => 'required|in:income,expense',
@@ -90,8 +90,8 @@ class FinancialActivityController extends Controller
             ->with('success', 'L’activité a été enregistrée.');
     }
 
-    private function authorizeManager(): void
+    private function authorizeManagerOrAdmin(): void
     {
-        abort_unless(auth()->user()->role === 'gestionnaire', 403);
+        abort_unless(in_array(auth()->user()->role, ['admin', 'gestionnaire'], true), 403);
     }
 }

@@ -43,4 +43,19 @@ class House extends Model
     {
         return $this->hasMany(Lease::class);
     }
+
+    public function isOccupied(): bool
+    {
+        return $this->locataire_id !== null
+            || $this->leases()->where('status', 'actif')->exists();
+    }
+
+    public function syncOccupancyStatus(): void
+    {
+        $status = $this->isOccupied() ? 'louee' : 'disponible';
+
+        if ($this->status !== $status) {
+            $this->updateQuietly(['status' => $status]);
+        }
+    }
 }

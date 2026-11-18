@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -26,13 +27,31 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $validated = $request->validated();
+        unset($validated['profile_photo']);
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($request->hasFile('profile_photo')) {
+            $newPhotoPath = $request->file('profile_photo')->store('profile-photos', 'public');
+            if (! $newPhotoPath) {
+                throw new \RuntimeException('Impossible d’enregistrer la photo de profil. Vérifiez les permissions du stockage public.');
+            }
+
+            $previousPhotoPath = $user->profile_photo_path;
+            $user->profile_photo_path = $newPhotoPath;
         }
 
-        $request->user()->save();
+        $user->fill($validated);
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
+
+        if (isset($previousPhotoPath)) {
+            Storage::disk('public')->delete($previousPhotoPath);
+        }
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
@@ -47,6 +66,9 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
+        if ($user->profile_photo_path) {
+            Storage::disk('public')->delete($user->profile_photo_path);
+        }
 
         Auth::logout();
 

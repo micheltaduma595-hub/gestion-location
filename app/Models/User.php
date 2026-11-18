@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\PasswordResetLink;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -12,6 +13,21 @@ class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
+    public const ROLE_ADMIN = 'admin';
+
+    public const ROLE_MANAGER = 'gestionnaire';
+
+    public const ROLE_CLIENT = 'client';
+
+    public const ROLE_TENANT = 'locataire';
+
+    public const ROLES = [
+        self::ROLE_TENANT => 'Locataire',
+        self::ROLE_CLIENT => 'Client',
+        self::ROLE_MANAGER => 'Gestionnaire',
+        self::ROLE_ADMIN => 'Administrateur',
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -23,7 +39,9 @@ class User extends Authenticatable
         'email',
         'password',
         'role',  // Ajouté pour gérer le rôle (gestionnaire ou client)
+        'role_reviewed_at',
         'phone', // Ajouté pour le numéro de téléphone
+        'profile_photo_path',
     ];
 
     /**
@@ -45,8 +63,15 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'role_reviewed_at' => 'datetime',
+            'login_locked_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new PasswordResetLink($token));
     }
 
     // --- Relations Eloquent ---

@@ -131,4 +131,14 @@ class AnnualFinancialReportTest extends TestCase
             'occurred_on' => now()->toDateString(),
         ])->assertForbidden();
     }
+
+    public function test_admin_can_access_the_annual_financial_report(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($admin)
+            ->get(route('annual-report.index'))
+            ->assertOk()
+            ->assertSee('Registre annuel');
+    }
 }

@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Contact;
 use App\Models\House;
 use App\Models\Locataire;
 use App\Models\User;
-use App\Models\Contact;
 
 class DashboardController extends Controller
 {
@@ -56,7 +55,7 @@ class DashboardController extends Controller
         // 3. Si c'est le gestionnaire -> Contrôle les maisons, les locataires, la caisse et les messages
         $totalHouses = House::count();
         $availableHouses = House::where('status', 'disponible')->count();
-        $totalTenants = User::where('role', 'client')->count();
+        $totalTenants = User::whereIn('role', [User::ROLE_CLIENT, User::ROLE_TENANT])->count();
         $houses = House::latest()->take(5)->get();
         $contacts = Contact::latest()->get(); // Récupération des messages de contact
 

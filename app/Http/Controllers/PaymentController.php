@@ -13,10 +13,53 @@ class PaymentController extends Controller
     /**
      * Affiche la liste des paiements enregistrés en caisse.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $payments = Payment::with(['locataire', 'house', 'user'])->latest()->get();
-        return view('payments.index', compact('payments'));
+        $validated = $request->validate([
+            'q' => ['nullable', 'string', 'max:255'],
+            'payment_method' => ['nullable', 'string', 'max:100'],
+            'date_from' => ['nullable', 'date'],
+            'date_to' => ['nullable', 'date', 'after_or_equal:date_from'],
+        ]);
+
+        $paymentsQuery = Payment::with(['locataire', 'house', 'user'])
+            ->when($validated['q'] ?? null, function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('reference_reçu', 'like', "%{$search}%")
+                        ->orWhere('month_covered', 'like', "%{$search}%")
+                        ->orWhereHas('locataire', function ($query) use ($search) {
+                            $query->where('nom', 'like', "%{$search}%")
+                                ->orWhere('prenom', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('house', function ($query) use ($search) {
+                            $query->where('title', 'like', "%{$search}%")
+                                ->orWhere('address', 'like', "%{$search}%");
+                        });
+                });
+            })
+            ->when($validated['payment_method'] ?? null, fn ($query, $method) => $query->where('payment_method', $method))
+            ->when($validated['date_from'] ?? null, fn ($query, $date) => $query->whereDate('created_at', '>=', $date))
+            ->when($validated['date_to'] ?? null, fn ($query, $date) => $query->whereDate('created_at', '<=', $date));
+
+        $filteredAmount = (clone $paymentsQuery)->sum('amount');
+        $filteredCount = (clone $paymentsQuery)->count();
+        $monthAmount = Payment::whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])->sum('amount');
+        $monthCount = Payment::whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])->count();
+        $payments = $paymentsQuery->latest()->paginate(15)->withQueryString();
+        $paymentMethods = Payment::query()
+            ->whereNotNull('payment_method')
+            ->distinct()
+            ->orderBy('payment_method')
+            ->pluck('payment_method');
+
+        return view('payments.index', compact(
+            'payments',
+            'filteredAmount',
+            'filteredCount',
+            'monthAmount',
+            'monthCount',
+            'paymentMethods',
+        ));
     }
 
     /**
@@ -38,7 +81,7 @@ class PaymentController extends Controller
         $request->validate([
             'locataire_id' => 'required|exists:locataires,id',
             'house_id' => 'required|exists:houses,id',
-            'amount' => 'required|numeric|min:0',
+            'amount' => 'required|numeric|min:0.01',
             'month_covered' => 'required|string|max:255',
             'payment_method' => 'required|string',
         ]);
@@ -82,15 +125,15 @@ class PaymentController extends Controller
      */
     public function update(Request $request, Payment $payment)
     {
-        $request->validate([
+        $validated = $request->validate([
             'locataire_id' => 'required|exists:locataires,id',
             'house_id' => 'required|exists:houses,id',
-            'amount' => 'required|numeric|min:0',
+            'amount' => 'required|numeric|min:0.01',
             'month_covered' => 'required|string|max:255',
             'payment_method' => 'required|string',
         ]);
 
-        $payment->update($request->all());
+        $payment->update($validated);
 
         return redirect()->route('payments.index')->with('success', 'Paiement mis à jour avec succès.');
     }

@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ProfileTest extends TestCase
@@ -18,7 +20,14 @@ class ProfileTest extends TestCase
             ->actingAs($user)
             ->get('/profile');
 
-        $response->assertOk();
+        $response->assertOk()
+            ->assertSee('Coordonnées et photo')
+            ->assertSee('Enregistrer mes coordonnées')
+            ->assertSee('Modifier le mot de passe')
+            ->assertSee('Mot de passe actuel')
+            ->assertSee('Nouveau mot de passe')
+            ->assertSee('Supprimer mon compte')
+            ->assertSee('form-control');
     }
 
     public function test_profile_information_can_be_updated(): void
@@ -30,6 +39,7 @@ class ProfileTest extends TestCase
             ->patch('/profile', [
                 'name' => 'Test User',
                 'email' => 'test@example.com',
+                'phone' => '243000000000',
             ]);
 
         $response
@@ -40,7 +50,55 @@ class ProfileTest extends TestCase
 
         $this->assertSame('Test User', $user->name);
         $this->assertSame('test@example.com', $user->email);
+        $this->assertSame('243000000000', $user->phone);
         $this->assertNull($user->email_verified_at);
+    }
+
+    public function test_profile_photo_can_be_uploaded_and_replaced(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->patch('/profile', [
+                'name' => $user->name,
+                'email' => $user->email,
+                'profile_photo' => UploadedFile::fake()->image('profile.png'),
+            ])
+            ->assertSessionHasNoErrors()
+            ->assertRedirect('/profile');
+
+        $firstPhoto = $user->fresh()->profile_photo_path;
+        $this->assertNotNull($firstPhoto);
+        Storage::disk('public')->assertExists($firstPhoto);
+
+        $this->patch('/profile', [
+            'name' => $user->name,
+            'email' => $user->email,
+            'profile_photo' => UploadedFile::fake()->image('new-profile.png'),
+        ])->assertSessionHasNoErrors();
+
+        $secondPhoto = $user->fresh()->profile_photo_path;
+        $this->assertNotSame($firstPhoto, $secondPhoto);
+        Storage::disk('public')->assertMissing($firstPhoto);
+        Storage::disk('public')->assertExists($secondPhoto);
+    }
+
+    public function test_non_image_profile_photo_is_rejected(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->from('/profile')
+            ->patch('/profile', [
+                'name' => $user->name,
+                'email' => $user->email,
+                'profile_photo' => UploadedFile::fake()->create('document.pdf', 100, 'application/pdf'),
+            ])
+            ->assertRedirect('/profile')
+            ->assertSessionHasErrors(['profile_photo']);
+
+        $this->assertNull($user->fresh()->profile_photo_path);
     }
 
     public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void

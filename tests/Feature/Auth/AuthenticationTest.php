@@ -3,7 +3,9 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
+use App\Notifications\AccountLockedAfterFailedLogins;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -17,11 +19,11 @@ class AuthenticationTest extends TestCase
         $response->assertOk()
             ->assertSee('Adresse Email')
             ->assertSee('Mot de passe')
-            ->assertSee("Retour à l'accueil pour s'inscrire")
+            ->assertSee("Retour à l'accueil pour s'inscrire", false)
             ->assertSee('Se connecter')
             ->assertDontSee('Attention / Important')
             ->assertDontSee('Se souvenir de moi')
-            ->assertDontSee('Mot de passe oublié ?');
+            ->assertSee('Mot de passe oublié ?');
     }
 
     public function test_users_can_authenticate_using_the_login_screen(): void
@@ -81,6 +83,30 @@ class AuthenticationTest extends TestCase
             'password' => 'wrong-password',
         ]);
 
+        $this->assertGuest();
+    }
+
+    public function test_account_is_locked_and_admin_notified_after_three_failed_passwords(): void
+    {
+        Notification::fake();
+        $admin = User::factory()->create(['role' => User::ROLE_ADMIN]);
+        $user = User::factory()->create();
+
+        foreach (range(1, 3) as $attempt) {
+            $this->post('/login', [
+                'email' => $user->email,
+                'password' => 'wrong-password',
+            ])->assertSessionHasErrors(['email']);
+        }
+
+        $this->assertSame(3, $user->fresh()->failed_login_attempts);
+        $this->assertNotNull($user->fresh()->login_locked_at);
+        Notification::assertSentTo($admin, AccountLockedAfterFailedLogins::class);
+
+        $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ])->assertSessionHasErrors(['email']);
         $this->assertGuest();
     }
 

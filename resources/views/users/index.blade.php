@@ -7,6 +7,9 @@
             <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">
                 <i class="bi bi-person-plus-fill"></i> Nouvel utilisateur
             </a>
+            <a href="{{ route('members.index') }}" class="btn btn-outline-primary btn-sm rounded-pill px-3 shadow-sm ms-2">
+                <i class="bi bi-person-vcard"></i> Annuaire des membres
+            </a>
         </div>
     </x-slot>
 
@@ -32,6 +35,18 @@
                         <i class="bi bi-list-nested"></i> Liste des utilisateurs enregistrés
                     </h5>
 
+                    @if($pendingRoleCount > 0)
+                        <div class="alert alert-warning d-flex align-items-start gap-2" role="alert">
+                            <i class="bi bi-person-exclamation fs-5"></i>
+                            <div>
+                                <div class="fw-bold">
+                                    {{ $pendingRoleCount }} nouveau(x) compte(s) à traiter
+                                </div>
+                                <div>Les nouveaux inscrits sont enregistrés comme locataires. Vérifiez leur profil et attribuez-leur le rôle approprié.</div>
+                            </div>
+                        </div>
+                    @endif
+
                     @if(isset($users) && $users->count() > 0)
                         <div class="table-responsive">
                             <table class="table table-hover align-middle">
@@ -47,19 +62,38 @@
                                 <tbody>
                                     @foreach($users as $user)
                                         <tr>
-                                            <td><strong>{{ $user->name }}</strong></td>
+                                            <td>
+                                                <strong>{{ $user->name }}</strong>
+                                                @if($user->role === \App\Models\User::ROLE_TENANT && is_null($user->role_reviewed_at))
+                                                    <span class="badge text-bg-warning ms-1">Nouveau — rôle à attribuer</span>
+                                                @endif
+                                                @if($user->login_locked_at)
+                                                    <span class="badge text-bg-danger ms-1">Compte bloqué</span>
+                                                @endif
+                                            </td>
                                             <td>{{ $user->email }}</td>
                                             <td>{{ $user->phone ?? 'Non renseigné' }}</td>
                                             <td>
-                                                @if($user->role == 'admin')
-                                                    <span class="badge bg-danger">Administrateur</span>
-                                                @elseif($user->role == 'gestionnaire')
-                                                    <span class="badge bg-warning text-dark">Gestionnaire</span>
-                                                @else
-                                                    <span class="badge bg-secondary">Client / Locataire</span>
-                                                @endif
+                                                @php
+                                                    $roleBadge = match($user->role) {
+                                                        \App\Models\User::ROLE_ADMIN => 'text-bg-danger',
+                                                        \App\Models\User::ROLE_MANAGER => 'text-bg-primary',
+                                                        \App\Models\User::ROLE_CLIENT => 'text-bg-secondary',
+                                                        \App\Models\User::ROLE_TENANT => 'text-bg-warning',
+                                                        default => 'text-bg-dark',
+                                                    };
+                                                @endphp
+                                                <span class="badge {{ $roleBadge }}">{{ \App\Models\User::ROLES[$user->role] ?? $user->role }}</span>
                                             </td>
                                             <td class="text-end">
+                                                @if($user->login_locked_at)
+                                                    <form action="{{ route('users.send-password-reset', $user) }}" method="POST" class="d-inline" onsubmit="return confirm('Envoyer un lien de réinitialisation à {{ $user->email }} ?')">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-sm btn-outline-primary" title="Envoyer le lien de réinitialisation">
+                                                            <i class="bi bi-envelope-arrow-up"></i> Rétablir l’accès
+                                                        </button>
+                                                    </form>
+                                                @endif
                                                 <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-outline-warning" title="Modifier">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </a>

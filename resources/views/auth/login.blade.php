@@ -30,6 +30,10 @@
             <input id="password" type="password" class="form-control rounded-3" name="password" required autocomplete="current-password" placeholder="••••••••">
         </div>
 
+        <div class="text-end">
+            <a href="{{ route('password.request') }}" class="small">Mot de passe oublié ?</a>
+        </div>
+
         <button type="submit" class="btn btn-primary px-4 py-2 fw-bold rounded-pill shadow-sm d-block ms-auto mt-4">
             Se connecter
         </button>

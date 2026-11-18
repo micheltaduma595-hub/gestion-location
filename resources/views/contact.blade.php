@@ -6,6 +6,7 @@
     <title>Gestion Loyer - Contact</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/compact-ui.css') }}">
     <style>
         body {
             background: linear-gradient(135deg, #0b1c3c 0%, #173868 50%, #1e4b87 100%);
@@ -34,7 +35,7 @@
         }
         .form-control {
             border-radius: 10px;
-            padding: 0.75rem 1rem;
+            padding: 0.65rem 0.85rem;
             border: 1px solid #dee2e6;
         }
         .form-control:focus {
@@ -121,6 +122,20 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     @endif
+                    @if(session('error'))
+                        <div class="alert alert-danger rounded-3 mb-4 shadow-sm" role="alert">
+                            <i class="bi bi-exclamation-circle-fill me-2"></i> {{ session('error') }}
+                        </div>
+                    @endif
+                    @if($errors->any())
+                        <div class="alert alert-danger rounded-3 mb-4 shadow-sm" role="alert">
+                            <ul class="mb-0">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
                     <form action="{{ route('contact.send') }}" method="POST">
                         @csrf
@@ -128,7 +143,7 @@
                             <label for="name" class="form-label fw-semibold text-dark">Nom complet</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-person"></i></span>
-                                <input type="text" class="form-control border-start-0" id="name" name="name" placeholder="Votre nom complet" required>
+                                <input type="text" class="form-control border-start-0" id="name" name="name" value="{{ old('name') }}" maxlength="255" placeholder="Votre nom complet" required>
                             </div>
                         </div>
 
@@ -136,13 +151,13 @@
                             <label for="email" class="form-label fw-semibold text-dark">Adresse Email</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-envelope"></i></span>
-                                <input type="email" class="form-control border-start-0" id="email" name="email" placeholder="nom@exemple.com" required>
+                                <input type="email" class="form-control border-start-0" id="email" name="email" value="{{ old('email') }}" maxlength="255" placeholder="nom@exemple.com" required>
                             </div>
                         </div>
 
                         <div class="mb-4">
                             <label for="message" class="form-label fw-semibold text-dark">Message</label>
-                            <textarea class="form-control" id="message" name="message" rows="4" placeholder="Écrivez votre message ici..." required></textarea>
+                            <textarea class="form-control" id="message" name="message" rows="4" maxlength="5000" placeholder="Écrivez votre message ici..." required>{{ old('message') }}</textarea>
                         </div>
 
                         <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-pill shadow-sm d-flex align-items-center justify-content-center gap-2">

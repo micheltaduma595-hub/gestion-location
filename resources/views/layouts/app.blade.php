@@ -10,9 +10,10 @@
         <!-- Bootstrap 5 CSS CDN -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="{{ asset('css/compact-ui.css') }}">
         <style>
             .app-sidebar {
-                --bs-offcanvas-width: 260px;
+                --bs-offcanvas-width: 240px;
                 background-color: #212529 !important;
             }
 
@@ -39,7 +40,7 @@
             .app-sidebar .nav-link {
                 color: #adb5bd;
                 border-radius: 0.5rem;
-                padding: 0.65rem 0.75rem;
+                padding: 0.55rem 0.7rem;
             }
 
             .app-sidebar .nav-link:hover,
@@ -50,8 +51,8 @@
 
             @media (min-width: 992px) {
                 .app-sidebar {
-                    flex: 0 0 260px !important;
-                    width: 260px !important;
+                    flex: 0 0 240px !important;
+                    width: 240px !important;
                 }
             }
         </style>
@@ -103,13 +104,42 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('members.*') ? 'active fw-bold' : '' }}" href="{{ route('members.index') }}" @if(request()->routeIs('members.*')) aria-current="page" @endif>
+                                    <i class="bi bi-person-vcard me-2"></i> Membres
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('payments.*') ? 'active fw-bold' : '' }}" href="{{ route('payments.index') }}" @if(request()->routeIs('payments.*')) aria-current="page" @endif>
-                                    <i class="bi bi-cash-stack me-2"></i> Caisse
+                                    <i class="bi bi-cash-stack me-2"></i> Suivi des paiements
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('annual-report.*') ? 'active fw-bold' : '' }}" href="{{ route('annual-report.index') }}" @if(request()->routeIs('annual-report.*')) aria-current="page" @endif>
                                     <i class="bi bi-calendar2-range me-2"></i> Registre annuel
+                                </a>
+                            </li>
+                        @endif
+
+                        @if(auth()->user() && in_array(auth()->user()->role, ['client', 'locataire'], true))
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('dashboard', 'client.dashboard.section') ? 'active fw-bold' : '' }}" href="{{ route('dashboard') }}" @if(request()->routeIs('dashboard', 'client.dashboard.section')) aria-current="page" @endif>
+                                    <i class="bi bi-speedometer2 me-2"></i> Tableau de bord
+                                </a>
+                            </li>
+                        @endif
+
+                        @if(auth()->user() && auth()->user()->role === 'gestionnaire')
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('reports.*') ? 'active fw-bold' : '' }}" href="{{ route('reports.index') }}" @if(request()->routeIs('reports.*')) aria-current="page" @endif>
+                                    <i class="bi bi-bar-chart-line me-2"></i> Rapports et statistiques
+                                </a>
+                            </li>
+                        @endif
+
+                        @if(auth()->user() && in_array(auth()->user()->role, ['gestionnaire', 'client', 'locataire'], true))
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('maintenance-requests.*') ? 'active fw-bold' : '' }}" href="{{ route('maintenance-requests.index') }}" @if(request()->routeIs('maintenance-requests.*')) aria-current="page" @endif>
+                                    <i class="bi bi-tools me-2"></i> Réclamations / Maintenance
                                 </a>
                             </li>
                         @endif
@@ -122,31 +152,41 @@
                             </li>
                         @endif
 
-                        @if(auth()->user() && in_array(auth()->user()->role, ['admin', 'gestionnaire'], true))
+                        @if(auth()->user() && auth()->user()->role === 'gestionnaire')
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('site-page-images.*') ? 'active fw-bold' : '' }}" href="{{ route('site-page-images.edit') }}" @if(request()->routeIs('site-page-images.*')) aria-current="page" @endif>
-                                    <i class="bi bi-images me-2"></i> Images des pages
+                                <a class="nav-link {{ request()->routeIs('leases.*') ? 'active fw-bold' : '' }}" href="{{ route('leases.index') }}" @if(request()->routeIs('leases.*')) aria-current="page" @endif>
+                                    <i class="bi bi-file-earmark-text me-2"></i> Contrats de bail
                                 </a>
                             </li>
+                        @endif
+
+                        @if(auth()->user())
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('site-logo.*') ? 'active fw-bold' : '' }}" href="{{ route('site-logo.edit') }}" @if(request()->routeIs('site-logo.*')) aria-current="page" @endif>
-                                    <i class="bi bi-image me-2"></i> Logo du site
+                                <a class="nav-link {{ request()->routeIs('settings.*', 'site-page-images.*', 'site-logo.*') ? 'active fw-bold' : '' }}" href="{{ route('settings.index') }}" @if(request()->routeIs('settings.*', 'site-page-images.*', 'site-logo.*')) aria-current="page" @endif>
+                                    <i class="bi bi-gear me-2"></i> Paramètres de l’application
                                 </a>
                             </li>
                         @endif
                     </ul>
 
-                    <div class="mt-auto pt-3 border-top border-secondary">
-                        <div class="small text-white mb-3 px-2 text-truncate">
-                            <i class="bi bi-person-circle text-info me-2"></i>{{ Auth::user()->name ?? 'Utilisateur' }}
+                    @auth
+                        <div class="mt-auto pt-3 border-top border-secondary">
+                            <div class="small text-white mb-3 px-2 text-truncate">
+                                @if(Auth::user()->profile_photo_path)
+                                    <img src="{{ asset('storage/' . Auth::user()->profile_photo_path) }}" alt="" class="rounded-circle me-2" style="width: 28px; height: 28px; object-fit: cover;">
+                                @else
+                                    <i class="bi bi-person-circle text-info me-2"></i>
+                                @endif
+                                {{ Auth::user()->name ?? 'Utilisateur' }}
+                            </div>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill w-100">
+                                    <i class="bi bi-box-arrow-right me-1"></i> Déconnexion
+                                </button>
+                            </form>
                         </div>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill w-100">
-                                <i class="bi bi-box-arrow-right me-1"></i> Déconnexion
-                            </button>
-                        </form>
-                    </div>
+                    @endauth
                 </div>
             </nav>
 

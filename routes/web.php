@@ -5,6 +5,11 @@ use App\Http\Controllers\HouseController;
 use App\Http\Controllers\LocataireController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PaymentController; 
+use App\Http\Controllers\LeaseController;
+use App\Http\Controllers\MaintenanceRequestController;
+use App\Http\Controllers\MemberController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FinancialActivityController;
 use App\Http\Controllers\ContactController; // 👈 Importation du contrôleur de contact
@@ -44,6 +49,9 @@ Route::get('/dashboard/{section}', [DashboardController::class, 'index'])
 
 // Routes protégées par l'authentification
 Route::middleware('auth')->group(function () {
+    Route::get('/members', [MemberController::class, 'index'])->name('members.index');
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::get('/annual-report', [FinancialActivityController::class, 'index'])->name('annual-report.index');
     Route::post('/annual-report', [FinancialActivityController::class, 'store'])->name('annual-report.store');
 
@@ -71,10 +79,21 @@ Route::middleware('auth')->group(function () {
     Route::post('locataires/{locataire}/attribuer', [LocataireController::class, 'attribuerMaison'])->name('locataires.attribuer');
 
     // Gestion des utilisateurs (CRUD complet pour l'administration)
+    Route::post('/users/{user}/send-password-reset', [UserController::class, 'sendPasswordResetLink'])->name('users.send-password-reset');
     Route::resource('users', UserController::class);
 
     // Gestion complète de la Caisse
     Route::resource('payments', PaymentController::class);
+
+    // Gestion des contrats de bail
+    Route::resource('leases', LeaseController::class)->except(['show']);
+
+    // Réclamations locataires et suivi de maintenance
+    Route::get('/maintenance-requests', [MaintenanceRequestController::class, 'index'])->name('maintenance-requests.index');
+    Route::get('/maintenance-requests/create', [MaintenanceRequestController::class, 'create'])->name('maintenance-requests.create');
+    Route::post('/maintenance-requests', [MaintenanceRequestController::class, 'store'])->name('maintenance-requests.store');
+    Route::patch('/maintenance-requests/{maintenanceRequest}', [MaintenanceRequestController::class, 'update'])->name('maintenance-requests.update');
+    Route::delete('/maintenance-requests/{maintenanceRequest}', [MaintenanceRequestController::class, 'destroy'])->name('maintenance-requests.destroy');
     
     // Route spécifique pour l'impression du reçu de loyer
     Route::get('payments/{payment}/receipt', [PaymentController::class, 'show'])->name('payments.receipt');

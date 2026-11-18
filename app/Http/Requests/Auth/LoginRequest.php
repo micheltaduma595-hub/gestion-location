@@ -8,6 +8,9 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
+use App\Models\User;
+use App\Notifications\AccountLockedAfterFailedLogins;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
@@ -42,8 +45,31 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
+        $user = User::where('email', $this->input('email'))->first();
+
+        if ($user?->login_locked_at) {
+            throw ValidationException::withMessages([
+                'email' => 'Votre compte est bloqué. Utilisez « Mot de passe oublié » pour le réactiver.',
+            ]);
+        }
+
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
+
+            if ($user) {
+                $failedAttempts = $user->failed_login_attempts + 1;
+                $user->forceFill([
+                    'failed_login_attempts' => $failedAttempts,
+                    'login_locked_at' => $failedAttempts >= 3 ? now() : null,
+                ])->save();
+
+                if ($failedAttempts === 3) {
+                    Notification::send(
+                        User::where('role', User::ROLE_ADMIN)->get(),
+                        new AccountLockedAfterFailedLogins($user, $this->ip()),
+                    );
+                }
+            }
 
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
@@ -51,6 +77,7 @@ class LoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+        $user?->forceFill(['failed_login_attempts' => 0])->save();
     }
 
     /**

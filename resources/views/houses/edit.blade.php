@@ -6,6 +6,7 @@
     <title>Modifier une Maison - GestionLoyer</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/compact-ui.css') }}">
 </head>
 <body class="bg-light">
 
@@ -47,14 +48,6 @@
                         <div class="mb-3">
                             <label for="price" class="form-label fw-semibold">Loyer Mensuel ($)</label>
                             <input type="number" step="0.01" class="form-control" id="price" name="price" value="{{ old('price', $house->price) }}" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="status" class="form-label fw-semibold">Statut</label>
-                            <select class="form-select" id="status" name="status" required>
-                                <option value="disponible" {{ old('status', $house->status) == 'disponible' ? 'selected' : '' }}>Disponible</option>
-                                <option value="louee" {{ old('status', $house->status) == 'louee' ? 'selected' : '' }}>Louée</option>
-                            </select>
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">

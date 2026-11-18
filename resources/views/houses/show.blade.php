@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $house->title }} - GestionLoyer</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/compact-ui.css') }}">
 </head>
 <body class="bg-light">
     <div class="container my-5">
@@ -15,9 +16,9 @@
         <div class="row g-5">
             <div class="col-md-7">
                 @if($house->image)
-                    <img src="{{ asset('storage/' . $house->image) }}" class="img-fluid rounded-4 shadow-sm w-100" style="max-height: 400px; object-fit: cover;" alt="Maison">
+                    <img src="{{ asset('storage/' . $house->image) }}" class="img-fluid rounded-4 shadow-sm w-100" style="max-height: 340px; object-fit: cover;" alt="Maison">
                 @else
-                    <div class="bg-secondary text-white rounded-4 d-flex align-items-center justify-content-center" style="height: 350px;">
+                    <div class="bg-secondary text-white rounded-4 d-flex align-items-center justify-content-center" style="height: 300px;">
                         <span>Aucune image disponible</span>
                     </div>
                 @endif

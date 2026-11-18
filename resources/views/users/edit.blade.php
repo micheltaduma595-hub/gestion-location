@@ -48,9 +48,9 @@
                                 <div class="mb-3">
                                     <label for="role" class="form-label fw-bold">Rôle dans le système</label>
                                     <select class="form-select" id="role" name="role" required>
-                                        <option value="client" {{ old('role', $user->role) == 'client' ? 'selected' : '' }}>Client / Locataire</option>
-                                        <option value="gestionnaire" {{ old('role', $user->role) == 'gestionnaire' ? 'selected' : '' }}>Gestionnaire</option>
-                                        <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Administrateur</option>
+                                        @foreach(\App\Models\User::ROLES as $value => $label)
+                                            <option value="{{ $value }}" @selected(old('role', $user->role) === $value)>{{ $label }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
 

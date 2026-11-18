@@ -37,9 +37,11 @@ class PasswordResetLinkController extends Controller
             $request->only('email')
         );
 
-        return $status == Password::RESET_LINK_SENT
-                    ? back()->with('status', __($status))
-                    : back()->withInput($request->only('email'))
-                        ->withErrors(['email' => __($status)]);
+        if (in_array($status, [Password::RESET_LINK_SENT, Password::INVALID_USER], true)) {
+            return back()->with('status', 'Si un compte est associé à cette adresse, un lien de réinitialisation vient de lui être envoyé.');
+        }
+
+        return back()->withInput($request->only('email'))
+            ->withErrors(['email' => 'Une demande récente est déjà en cours. Veuillez réessayer dans quelques instants.']);
     }
 }

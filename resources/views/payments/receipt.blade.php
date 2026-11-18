@@ -7,9 +7,10 @@
     <!-- Bootstrap 5 CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/compact-ui.css') }}">
     <style>
         body { background-color: #f8f9fa; }
-        .receipt-card { max-width: 750px; margin: 40px auto; background: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+        .receipt-card { max-width: 750px; margin: 32px auto; background: #fff; padding: 32px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
         @media print {
             body { background: #fff; }
             .no-print { display: none !important; }
