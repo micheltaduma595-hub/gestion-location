@@ -67,6 +67,7 @@ class PaymentController extends Controller
      */
     public function create()
     {
+        Locataire::syncTenantAccounts();
         $locataires = Locataire::all();
         // Récupère toutes les maisons pour qu'elles s'affichent à coup sûr
         $houses = House::all(); 
@@ -115,6 +116,7 @@ class PaymentController extends Controller
      */
     public function edit(Payment $payment)
     {
+        Locataire::syncTenantAccounts();
         $locataires = Locataire::all();
         $houses = House::all();
         return view('payments.edit', compact('payment', 'locataires', 'houses'));

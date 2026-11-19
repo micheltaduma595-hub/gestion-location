@@ -14,6 +14,7 @@ class LocataireController extends Controller
      */
     public function index()
     {
+        Locataire::syncTenantAccounts();
         $locataires = Locataire::with('maisons')->latest()->get();
         return view('locataires.index', compact('locataires'));
     }

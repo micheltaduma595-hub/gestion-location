@@ -13,6 +13,29 @@ class PaymentFollowUpTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_tenant_account_missing_from_directory_is_restored_in_payment_form(): void
+    {
+        $manager = User::factory()->create(['role' => 'gestionnaire']);
+        $tenant = User::factory()->create([
+            'name' => 'Luc Bla',
+            'email' => 'luc@example.com',
+            'phone' => '+2439876666',
+            'role' => User::ROLE_TENANT,
+        ]);
+
+        $this->actingAs($manager)
+            ->get(route('payments.create'))
+            ->assertOk()
+            ->assertSee('Luc Bla')
+            ->assertSee('+2439876666');
+
+        $this->assertDatabaseHas('locataires', [
+            'nom' => 'Luc Bla',
+            'email' => $tenant->email,
+            'telephone' => '+2439876666',
+        ]);
+    }
+
     public function test_manager_can_view_payment_totals_and_filter_the_ledger(): void
     {
         $manager = User::factory()->create(['role' => 'gestionnaire']);

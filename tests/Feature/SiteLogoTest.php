@@ -30,9 +30,15 @@ class SiteLogoTest extends TestCase
         SiteLogo::savePath('logos/system-logo.png');
         $client = User::factory()->create(['role' => User::ROLE_CLIENT]);
 
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('GestionLoyer')
+            ->assertSee(asset('storage/logos/system-logo.png'), false);
+
         $this->actingAs($client)
             ->get(route('dashboard'))
             ->assertOk()
+            ->assertSee('GestionLoyer')
             ->assertSee('id="clientSidebar"', false)
             ->assertSee('Navigation principale')
             ->assertSee('Paramètres de l’application')

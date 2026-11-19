@@ -32,6 +32,18 @@
             border-radius: 0.5rem;
         }
 
+        .client-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.65rem;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .client-brand-name {
+            white-space: nowrap;
+        }
+
         .client-content {
             min-width: 0;
         }
@@ -49,24 +61,25 @@
         <nav class="client-sidebar offcanvas-lg offcanvas-start d-lg-flex flex-column p-3 shadow"
             tabindex="-1" id="clientSidebar" aria-labelledby="clientSidebarLabel">
             <div class="offcanvas-header d-lg-none px-0 pt-0">
-                <a class="navbar-brand fw-bold" href="{{ route('dashboard') }}" id="clientSidebarLabel">
+                <a class="navbar-brand client-brand fw-bold" href="{{ route('dashboard') }}" id="clientSidebarLabel">
                     @if($siteLogo)
                         <img src="{{ asset('storage/' . $siteLogo) }}" alt="Logo du site" class="client-brand-logo">
                     @else
-                        <i class="bi bi-house-door-fill text-info me-2"></i>Gestion<span class="text-info">Loyer</span>
+                        <i class="bi bi-house-door-fill text-info"></i>
                     @endif
+                    <span class="client-brand-name">GestionLoyer</span>
                 </a>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Fermer"></button>
             </div>
 
             <div class="d-none d-lg-flex align-items-center mb-4 px-2 pt-2">
-                <a class="fw-bold fs-5 text-decoration-none" href="{{ route('dashboard') }}">
+                <a class="client-brand fw-bold fs-5" href="{{ route('dashboard') }}">
                     @if($siteLogo)
                         <img src="{{ asset('storage/' . $siteLogo) }}" alt="Logo du site" class="client-brand-logo">
                     @else
-                        <i class="bi bi-house-door-fill text-info me-2"></i>
-                        <span class="text-white">Gestion</span><span class="text-info">Loyer</span>
+                        <i class="bi bi-house-door-fill text-info"></i>
                     @endif
+                    <span class="client-brand-name">GestionLoyer</span>
                 </a>
             </div>
 
@@ -126,13 +139,13 @@
 
         <div class="client-content flex-grow-1">
             <header class="d-lg-none navbar navbar-dark bg-dark shadow-sm px-3">
-                <a class="navbar-brand fw-bold text-white" href="{{ route('dashboard') }}">
+                <a class="navbar-brand client-brand fw-bold text-white" href="{{ route('dashboard') }}">
                     @if($siteLogo)
                         <img src="{{ asset('storage/' . $siteLogo) }}" alt="Logo du site" class="client-brand-logo">
                     @else
                         <i class="bi bi-house-door-fill text-info"></i>
-                        Gestion<span class="text-info">Loyer</span>
                     @endif
+                    <span class="client-brand-name">GestionLoyer</span>
                 </a>
                 <button class="navbar-toggler border-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#clientSidebar" aria-controls="clientSidebar" aria-label="Ouvrir le menu">
                     <span class="navbar-toggler-icon"></span>

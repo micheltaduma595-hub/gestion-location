@@ -33,6 +33,22 @@
                 border-radius: 0.5rem;
             }
 
+            .app-brand {
+                min-width: 0;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.65rem;
+                color: #fff;
+            }
+
+            .app-brand-name {
+                max-width: 140px;
+                line-height: 1.15;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
             .app-content {
                 min-width: 0;
             }
@@ -62,25 +78,25 @@
             <nav class="app-sidebar offcanvas-lg offcanvas-start d-lg-flex flex-column p-3 shadow"
                 tabindex="-1" id="appSidebar" aria-labelledby="appSidebarLabel">
                 <div class="offcanvas-header d-lg-none px-0 pt-0">
-                    <a class="navbar-brand fw-bold" href="{{ url('/dashboard') }}" id="appSidebarLabel">
+                    <a class="navbar-brand app-brand fw-bold" href="{{ url('/dashboard') }}" id="appSidebarLabel">
                         @if($siteLogo)
                             <img src="{{ asset('storage/' . $siteLogo) }}" alt="Logo du site" class="app-brand-logo">
                         @else
                             <i class="bi bi-house-door-fill text-info"></i>
-                            <span class="app-brand-name">Gestion</span><span class="app-brand-accent">Loyer</span>
                         @endif
+                        <span class="app-brand-name">{{ config('app.name') ?: 'GestionLoyer' }}</span>
                     </a>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Fermer"></button>
                 </div>
 
                 <div class="d-none d-lg-flex align-items-center mb-4 px-2 pt-2">
-                    <a class="fw-bold fs-5 text-decoration-none" href="{{ url('/dashboard') }}">
+                    <a class="app-brand fw-bold fs-5 text-decoration-none" href="{{ url('/dashboard') }}">
                         @if($siteLogo)
                             <img src="{{ asset('storage/' . $siteLogo) }}" alt="Logo du site" class="app-brand-logo">
                         @else
                             <i class="bi bi-house-door-fill text-info me-2"></i>
-                            <span class="app-brand-name">Gestion</span><span class="app-brand-accent">Loyer</span>
                         @endif
+                        <span class="app-brand-name">{{ config('app.name') ?: 'GestionLoyer' }}</span>
                     </a>
                 </div>
 
@@ -192,13 +208,13 @@
 
             <div class="app-content flex-grow-1">
                 <header class="d-lg-none navbar navbar-dark bg-dark shadow-sm px-3">
-                    <a class="navbar-brand fw-bold text-white" href="{{ url('/dashboard') }}">
+                    <a class="navbar-brand app-brand fw-bold text-white" href="{{ url('/dashboard') }}">
                         @if($siteLogo)
                             <img src="{{ asset('storage/' . $siteLogo) }}" alt="Logo du site" class="app-brand-logo">
                         @else
                             <i class="bi bi-house-door-fill text-info"></i>
-                            Gestion<span class="text-info">Loyer</span>
                         @endif
+                        <span class="app-brand-name">{{ config('app.name') ?: 'GestionLoyer' }}</span>
                     </a>
                     <button class="navbar-toggler border-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#appSidebar" aria-controls="appSidebar" aria-label="Ouvrir le menu">
                         <span class="navbar-toggler-icon"></span>

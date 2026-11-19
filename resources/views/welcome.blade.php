@@ -130,8 +130,8 @@
                     <div class="bg-primary text-white p-2 rounded-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
                         <i class="bi bi-house-door-fill fs-5"></i>
                     </div>
-                    <span>Gestion<span class="text-info">Loyer</span></span>
                 @endif
+                <span>GestionLoyer</span>
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>

@@ -68,16 +68,8 @@ class UserController extends Controller
                 'role_reviewed_at' => now(),
             ]);
 
-            if ($user->role === User::ROLE_TENANT) {
-                Locataire::firstOrCreate(
-                    ['email' => $user->email],
-                    [
-                        'nom' => $user->name,
-                        'prenom' => '',
-                        'telephone' => $user->phone ?? '',
-                        'profession' => 'Non spécifié',
-                    ],
-                );
+            if (in_array($user->role, [User::ROLE_CLIENT, User::ROLE_TENANT], true)) {
+                Locataire::syncFromUser($user);
             }
         });
 
@@ -121,16 +113,8 @@ class UserController extends Controller
             'role_reviewed_at' => now(),
         ]);
 
-        if ($user->role === User::ROLE_TENANT) {
-            Locataire::firstOrCreate(
-                ['email' => $user->email],
-                [
-                    'nom' => $user->name,
-                    'prenom' => '',
-                    'telephone' => $user->phone ?? '',
-                    'profession' => 'Non spécifié',
-                ],
-            );
+        if (in_array($user->role, [User::ROLE_CLIENT, User::ROLE_TENANT], true)) {
+            Locataire::syncFromUser($user);
         }
 
         return redirect()->route('users.index')->with('success', 'Utilisateur mis à jour avec succès.');
