@@ -4,9 +4,14 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight fw-bold text-dark mb-0">
                 <i class="bi bi-person-badge-fill text-primary"></i> Gestion des Locataires
             </h2>
-            <a href="{{ route('locataires.create') }}" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">
-                <i class="bi bi-person-plus-fill"></i> Nouveau locataire
-            </a>
+            <div class="d-flex gap-2">
+                <a href="{{ route('locataires.export.pdf') }}" target="_blank" rel="noopener" class="btn btn-outline-danger btn-sm rounded-pill px-3 shadow-sm">
+                    <i class="bi bi-file-earmark-pdf"></i> Exporter en PDF
+                </a>
+                <a href="{{ route('locataires.create') }}" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">
+                    <i class="bi bi-person-plus-fill"></i> Nouveau locataire
+                </a>
+            </div>
         </div>
     </x-slot>
 
@@ -37,10 +42,7 @@
                             <table class="table table-hover align-middle">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Nom & Prénom</th>
-                                        <th>Téléphone</th>
-                                        <th>Profession</th>
-                                        <th>Maison Attribuée</th>
+                                        <th>Nom, Postnom & Prénom</th>
                                         <th class="text-end">Actions</th>
                                     </tr>
                                 </thead>
@@ -48,21 +50,9 @@
                                     @foreach($locataires as $locataire)
                                         <tr>
                                             <td>
-                                                <strong>{{ $locataire->nom }} {{ $locataire->prenom }}</strong><br>
-                                                <small class="text-muted">{{ $locataire->email ?? 'Pas d\'email' }}</small>
-                                            </td>
-                                            <td>{{ $locataire->telephone }}</td>
-                                            <td>{{ $locataire->profession ?? 'Non renseignée' }}</td>
-                                            <td>
-                                                @if($locataire->maisons->count() > 0)
-                                                    @foreach($locataire->maisons as $maison)
-                                                        <span class="badge bg-success mb-1">
-                                                            <i class="bi bi-house-door-fill"></i> {{ $maison->title }}
-                                                        </span>
-                                                    @endforeach
-                                                @else
-                                                    <span class="badge bg-warning text-dark">Aucune maison</span>
-                                                @endif
+                                                <a href="{{ route('locataires.show', $locataire) }}" class="fw-bold text-decoration-none">
+                                                    {{ implode(' ', array_filter([$locataire->nom, $locataire->postnom, $locataire->prenom])) }}
+                                                </a>
                                             </td>
                                             <td class="text-end">
                                                 <a href="{{ route('locataires.attribuer.form', $locataire->id) }}" class="btn btn-sm btn-outline-primary" title="Attribuer une maison">

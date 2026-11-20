@@ -93,4 +93,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Lease::class, 'client_id');
     }
+
+    public function locataire()
+    {
+        return $this->hasOne(Locataire::class, 'email', 'email');
+    }
 }

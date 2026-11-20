@@ -21,10 +21,11 @@
                         {{ __('Maisons') }}
                     </x-nav-link>
 
-                    <!-- Lien Locataires -->
-                    <x-nav-link :href="route('locataires.index')" :active="request()->routeIs('locataires.*')">
-                        {{ __('Locataires') }}
-                    </x-nav-link>
+                    @if(auth()->user() && in_array(auth()->user()->role, ['admin', 'gestionnaire'], true))
+                        <x-nav-link :href="route('locataires.index')" :active="request()->routeIs('locataires.*')">
+                            {{ __('Locataires') }}
+                        </x-nav-link>
+                    @endif
 
                     <!-- 👇 AJOUTER LE LIEN CAISSE ICI -->
                     <x-nav-link :href="route('payments.index')" :active="request()->routeIs('payments.*')">
@@ -97,9 +98,11 @@
                 {{ __('Maisons') }}
             </x-responsive-nav-link>
 
-            <x-responsive-nav-link :href="route('locataires.index')" :active="request()->routeIs('locataires.*')">
-                {{ __('Locataires') }}
-            </x-responsive-nav-link>
+            @if(auth()->user() && in_array(auth()->user()->role, ['admin', 'gestionnaire'], true))
+                <x-responsive-nav-link :href="route('locataires.index')" :active="request()->routeIs('locataires.*')">
+                    {{ __('Locataires') }}
+                </x-responsive-nav-link>
+            @endif
 
             <!-- 👇 AJOUTER AUSSI LE LIEN MOBILE ICI -->
             <x-responsive-nav-link :href="route('payments.index')" :active="request()->routeIs('payments.*')">

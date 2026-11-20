@@ -1,66 +1,83 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Modifier un Locataire - GestionLoyer</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="{{ asset('css/compact-ui.css') }}">
-</head>
-<body class="bg-light">
+<x-app-layout>
+    <x-slot name="header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight fw-bold text-dark mb-0">
+                <i class="bi bi-pencil-square text-primary"></i> Modifier un locataire
+            </h2>
+            <a href="{{ route('locataires.index') }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                <i class="bi bi-arrow-left me-1"></i> Retour
+            </a>
+        </div>
+    </x-slot>
 
-    <div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card shadow-sm border-0 rounded-4 p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h3 class="fw-bold text-primary mb-0"><i class="bi bi-pencil-square me-2"></i> Modifier le Locataire</h3>
-                        <a href="{{ route('locataires.index') }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
-                            <i class="bi bi-arrow-left me-1"></i> Retour
-                        </a>
+    <div class="py-4">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div class="card-body p-4">
+                            @if ($errors->any())
+                                <div class="alert alert-danger rounded-3">
+                                    <ul class="mb-0">
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            <form action="{{ route('locataires.update', $locataire) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="nom" class="form-label fw-bold">Nom</label>
+                                        <input type="text" class="form-control @error('nom') is-invalid @enderror" id="nom" name="nom" value="{{ old('nom', $locataire->nom) }}" required>
+                                        @error('nom') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="postnom" class="form-label fw-bold">Postnom (Optionnel)</label>
+                                        <input type="text" class="form-control @error('postnom') is-invalid @enderror" id="postnom" name="postnom" value="{{ old('postnom', $locataire->postnom) }}">
+                                        @error('postnom') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="prenom" class="form-label fw-bold">Prénom</label>
+                                        <input type="text" class="form-control @error('prenom') is-invalid @enderror" id="prenom" name="prenom" value="{{ old('prenom', $locataire->prenom) }}" required>
+                                        @error('prenom') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="telephone" class="form-label fw-bold">Téléphone</label>
+                                        <input type="text" class="form-control @error('telephone') is-invalid @enderror" id="telephone" name="telephone" value="{{ old('telephone', $locataire->telephone) }}" required>
+                                        @error('telephone') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label fw-bold">Email (Optionnel)</label>
+                                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $locataire->email) }}">
+                                        @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="profession" class="form-label fw-bold">Profession (Optionnel)</label>
+                                    <input type="text" class="form-control @error('profession') is-invalid @enderror" id="profession" name="profession" value="{{ old('profession', $locataire->profession) }}">
+                                    @error('profession') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+                                    <a href="{{ route('locataires.index') }}" class="btn btn-secondary rounded-pill px-4">Annuler</a>
+                                    <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                                        <i class="bi bi-check-circle me-1"></i> Mettre à jour
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-
-                    @if ($errors->any())
-                        <div class="alert alert-danger rounded-3">
-                            <ul class="mb-0">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
-                    <form action="{{ route('locataires.update', $locataire->id) }}" method="POST">
-                        @csrf
-                        @method('PUT')
-
-                        <div class="mb-3">
-                            <label for="name" class="form-label fw-semibold">Nom complet</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $locataire->name) }}" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="email" class="form-label fw-semibold">Adresse Email</label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $locataire->email) }}" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="phone" class="form-label fw-semibold">Téléphone</label>
-                            <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone', $locataire->phone ?? '') }}">
-                        </div>
-
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                            <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold">
-                                <i class="bi bi-check-circle me-1"></i> Mettre à jour
-                            </button>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+</x-app-layout>

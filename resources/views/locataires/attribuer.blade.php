@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight fw-bold text-dark mb-0">
-            <i class="bi bi-house-add text-primary"></i> Assigner une maison à {{ $locataire->nom }} {{ $locataire->prenom }}
+            <i class="bi bi-house-add text-primary"></i> Assigner une maison à {{ implode(' ', array_filter([$locataire->nom, $locataire->postnom, $locataire->prenom])) }}
         </h2>
     </x-slot>
 

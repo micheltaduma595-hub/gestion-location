@@ -56,7 +56,7 @@
             <div class="row mb-4">
                 <div class="col-6">
                     <h6 class="text-uppercase text-muted fw-bold small">Informations Locataire :</h6>
-                    <p class="mb-1"><strong>Nom :</strong> {{ $payment->locataire->nom ?? '' }} {{ $payment->locataire->prenom ?? '' }}</p>
+                    <p class="mb-1"><strong>Nom :</strong> {{ implode(' ', array_filter([$payment->locataire->nom ?? null, $payment->locataire->postnom ?? null, $payment->locataire->prenom ?? null])) }}</p>
                     <p class="mb-1"><strong>Téléphone :</strong> {{ $payment->locataire->telephone ?? 'N/A' }}</p>
                 </div>
                 <div class="col-6">

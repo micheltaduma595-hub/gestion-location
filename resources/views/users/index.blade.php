@@ -53,9 +53,6 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>Nom</th>
-                                        <th>Email</th>
-                                        <th>Téléphone</th>
-                                        <th>Rôle</th>
                                         <th class="text-end">Actions</th>
                                     </tr>
                                 </thead>
@@ -63,37 +60,11 @@
                                     @foreach($users as $user)
                                         <tr>
                                             <td>
-                                                <strong>{{ $user->name }}</strong>
-                                                @if($user->role === \App\Models\User::ROLE_TENANT && is_null($user->role_reviewed_at))
-                                                    <span class="badge text-bg-warning ms-1">Nouveau — rôle à attribuer</span>
-                                                @endif
-                                                @if($user->login_locked_at)
-                                                    <span class="badge text-bg-danger ms-1">Compte bloqué</span>
-                                                @endif
-                                            </td>
-                                            <td>{{ $user->email }}</td>
-                                            <td>{{ $user->phone ?? 'Non renseigné' }}</td>
-                                            <td>
-                                                @php
-                                                    $roleBadge = match($user->role) {
-                                                        \App\Models\User::ROLE_ADMIN => 'text-bg-danger',
-                                                        \App\Models\User::ROLE_MANAGER => 'text-bg-primary',
-                                                        \App\Models\User::ROLE_CLIENT => 'text-bg-secondary',
-                                                        \App\Models\User::ROLE_TENANT => 'text-bg-warning',
-                                                        default => 'text-bg-dark',
-                                                    };
-                                                @endphp
-                                                <span class="badge {{ $roleBadge }}">{{ \App\Models\User::ROLES[$user->role] ?? $user->role }}</span>
+                                                <a href="{{ route('users.show', $user) }}" class="fw-bold text-decoration-none">
+                                                    {{ $user->name }}
+                                                </a>
                                             </td>
                                             <td class="text-end">
-                                                @if($user->login_locked_at)
-                                                    <form action="{{ route('users.send-password-reset', $user) }}" method="POST" class="d-inline" onsubmit="return confirm('Envoyer un lien de réinitialisation à {{ $user->email }} ?')">
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-sm btn-outline-primary" title="Envoyer le lien de réinitialisation">
-                                                            <i class="bi bi-envelope-arrow-up"></i> Rétablir l’accès
-                                                        </button>
-                                                    </form>
-                                                @endif
                                                 <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-outline-warning" title="Modifier">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </a>

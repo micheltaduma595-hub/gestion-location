@@ -11,11 +11,26 @@
                         <form method="POST" action="{{ route('register') }}">
                             @csrf
 
-                            <!-- Nom complet -->
                             <div class="mb-3">
-                                <label for="name" class="form-label fw-bold">Nom complet</label>
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autofocus autocomplete="name">
-                                @error('name')
+                                <label for="nom" class="form-label fw-bold">Nom</label>
+                                <input id="nom" type="text" class="form-control @error('nom') is-invalid @enderror" name="nom" value="{{ old('nom') }}" required autofocus autocomplete="family-name">
+                                @error('nom')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="postnom" class="form-label fw-bold">Postnom (Optionnel)</label>
+                                <input id="postnom" type="text" class="form-control @error('postnom') is-invalid @enderror" name="postnom" value="{{ old('postnom') }}" autocomplete="additional-name">
+                                @error('postnom')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="prenom" class="form-label fw-bold">Prénom</label>
+                                <input id="prenom" type="text" class="form-control @error('prenom') is-invalid @enderror" name="prenom" value="{{ old('prenom') }}" required autocomplete="given-name">
+                                @error('prenom')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -25,6 +40,14 @@
                                 <label for="telephone" class="form-label fw-bold">Numéro de téléphone</label>
                                 <input id="telephone" type="text" class="form-control @error('telephone') is-invalid @enderror" name="telephone" value="{{ old('telephone') }}" placeholder="+243..." required>
                                 @error('telephone')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="profession" class="form-label fw-bold">Profession (Optionnel)</label>
+                                <input id="profession" type="text" class="form-control @error('profession') is-invalid @enderror" name="profession" value="{{ old('profession') }}" autocomplete="organization-title">
+                                @error('profession')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -54,6 +77,9 @@
                             </div>
 
                             <div class="d-flex justify-content-between align-items-center mb-4">
+                                <a class="btn btn-outline-secondary btn-sm rounded-pill px-3" href="{{ route('home') }}">
+                                    <i class="bi bi-arrow-left me-1"></i> Retour
+                                </a>
                                 <a class="text-decoration-none small text-muted" href="{{ route('login') }}">
                                     Déjà enregistré ? Se connecter
                                 </a>

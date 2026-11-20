@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Locataire;
 use App\Models\User;
 use App\Notifications\PasswordResetLink;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
@@ -39,6 +41,41 @@ class UserRoleManagementTest extends TestCase
             'email' => 'daniel@example.com',
             'telephone' => '+243831262631',
         ]);
+    }
+
+    public function test_admin_user_list_shows_tenant_profession_and_account_registration_date(): void
+    {
+        $admin = User::factory()->create(['role' => User::ROLE_ADMIN]);
+        $tenant = User::factory()->create([
+            'name' => 'Locataire Exemple',
+            'email' => 'locataire@example.com',
+            'role' => User::ROLE_TENANT,
+            'created_at' => Carbon::parse('2025-04-11 12:00:00'),
+            'updated_at' => Carbon::parse('2025-04-11 12:00:00'),
+        ]);
+        Locataire::create([
+            'nom' => 'Locataire',
+            'postnom' => 'Exemple',
+            'prenom' => 'Test',
+            'email' => $tenant->email,
+            'telephone' => '000000',
+            'profession' => 'Architecte',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('users.index'))
+            ->assertOk()
+            ->assertSee('Locataire Exemple')
+            ->assertSee('href="'.route('users.show', $tenant).'"', false)
+            ->assertDontSee('Architecte')
+            ->assertDontSee('11/04/2025');
+
+        $this->get(route('users.show', $tenant))
+            ->assertOk()
+            ->assertSee('locataire@example.com')
+            ->assertSee('Architecte')
+            ->assertSee('11/04/2025')
+            ->assertSee('Locataire');
     }
 
     public function test_updating_an_existing_tenant_restores_its_missing_tenant_record(): void
@@ -90,8 +127,11 @@ class UserRoleManagementTest extends TestCase
             ->assertOk()
             ->assertSee('1 nouveau(x) compte(s) à traiter')
             ->assertSee('Nouveau Locataire')
-            ->assertSee('Nouveau — rôle à attribuer')
             ->assertSee('Ancien Client');
+
+        $this->get(route('users.show', $newTenant))
+            ->assertOk()
+            ->assertSee('Nouveau — rôle à attribuer');
 
         $this->put(route('users.update', $newTenant), [
             'name' => $newTenant->name,
@@ -107,7 +147,10 @@ class UserRoleManagementTest extends TestCase
 
         $this->get(route('users.index'))
             ->assertOk()
-            ->assertDontSee('nouveau(x) compte(s) à traiter')
+            ->assertDontSee('nouveau(x) compte(s) à traiter');
+
+        $this->get(route('users.show', $newTenant))
+            ->assertOk()
             ->assertDontSee('Nouveau — rôle à attribuer');
     }
 
@@ -141,6 +184,9 @@ class UserRoleManagementTest extends TestCase
 
         $this->actingAs($manager)
             ->get(route('users.index'))
+            ->assertForbidden();
+
+        $this->get(route('users.show', $client))
             ->assertForbidden();
 
         $this->put(route('users.update', $client), [
@@ -178,6 +224,11 @@ class UserRoleManagementTest extends TestCase
             'failed_login_attempts' => 3,
             'login_locked_at' => now(),
         ]);
+
+        $this->actingAs($admin)
+            ->get(route('users.show', $user))
+            ->assertOk()
+            ->assertSee('Rétablir l’accès');
 
         $this->actingAs($admin)
             ->post(route('users.send-password-reset', $user))

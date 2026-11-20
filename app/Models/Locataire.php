@@ -11,6 +11,7 @@ class Locataire extends Model
 
     protected $fillable = [
         'nom',
+        'postnom',
         'prenom',
         'email',
         'telephone',
@@ -19,15 +20,20 @@ class Locataire extends Model
 
     public static function syncFromUser(User $user): self
     {
-        return static::updateOrCreate(
-            ['email' => $user->email],
-            [
+        $locataire = static::firstOrNew(['email' => $user->email]);
+        if (! $locataire->exists) {
+            $locataire->fill([
                 'nom' => $user->name,
+                'postnom' => null,
                 'prenom' => '',
                 'telephone' => $user->phone ?? '',
                 'profession' => 'Non spécifié',
-            ],
-        );
+            ]);
+        }
+
+        $locataire->save();
+
+        return $locataire;
     }
 
     public static function syncTenantAccounts(): void
@@ -43,6 +49,11 @@ class Locataire extends Model
     public function maisons()
     {
         return $this->hasMany(House::class, 'locataire_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'email', 'email');
     }
 
     public function payments()

@@ -73,6 +73,8 @@ Route::middleware('auth')->group(function () {
 
     // Gestion des locataires (CRUD complet)
     Route::resource('locataires', LocataireController::class);
+    Route::get('locataires/export/pdf', [LocataireController::class, 'exportPdf'])
+        ->name('locataires.export.pdf');
 
     // Routes spécifiques pour l'attribution des maisons à un locataire
     Route::get('locataires/{locataire}/attribuer', [LocataireController::class, 'attribuerMaisonForm'])->name('locataires.attribuer.form');

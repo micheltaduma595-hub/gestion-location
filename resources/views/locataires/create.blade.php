@@ -21,6 +21,11 @@
                                         @error('nom') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                     </div>
                                     <div class="col-md-6">
+                                        <label for="postnom" class="form-label fw-bold">Postnom (Optionnel)</label>
+                                        <input type="text" class="form-control @error('postnom') is-invalid @enderror" id="postnom" name="postnom" value="{{ old('postnom') }}">
+                                        @error('postnom') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    </div>
+                                    <div class="col-md-6">
                                         <label for="prenom" class="form-label fw-bold">Prénom</label>
                                         <input type="text" class="form-control @error('prenom') is-invalid @enderror" id="prenom" name="prenom" value="{{ old('prenom') }}" required>
                                         @error('prenom') <div class="invalid-feedback">{{ $message }}</div> @enderror

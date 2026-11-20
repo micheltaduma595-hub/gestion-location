@@ -34,6 +34,15 @@ class UserController extends Controller
         return view('users.index', compact('users', 'pendingRoleCount'));
     }
 
+    public function show(User $user)
+    {
+        $this->authorizeAdministrator();
+
+        $user->load('locataire');
+
+        return view('users.show', compact('user'));
+    }
+
     /**
      * Affiche le formulaire de création d'un utilisateur.
      */

@@ -109,14 +109,20 @@
                                     <i class="bi bi-speedometer2 me-2"></i> Tableau de bord
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('houses.*') ? 'active fw-bold' : '' }}" href="{{ route('houses.index') }}" @if(request()->routeIs('houses.*')) aria-current="page" @endif>
-                                    <i class="bi bi-house-fill me-2"></i> Maisons
-                                </a>
-                            </li>
+                        @endif
+
+                        @if(auth()->user() && in_array(auth()->user()->role, ['admin', 'gestionnaire'], true))
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('locataires.*') ? 'active fw-bold' : '' }}" href="{{ route('locataires.index') }}" @if(request()->routeIs('locataires.*')) aria-current="page" @endif>
                                     <i class="bi bi-people-fill me-2"></i> Locataires
+                                </a>
+                            </li>
+                        @endif
+
+                        @if(auth()->user() && auth()->user()->role === 'gestionnaire')
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('houses.*') ? 'active fw-bold' : '' }}" href="{{ route('houses.index') }}" @if(request()->routeIs('houses.*')) aria-current="page" @endif>
+                                    <i class="bi bi-house-fill me-2"></i> Maisons
                                 </a>
                             </li>
                             <li class="nav-item">

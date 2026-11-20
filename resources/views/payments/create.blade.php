@@ -30,7 +30,7 @@
                                     <option value="">-- Sélectionner un locataire --</option>
                                     @foreach($locataires as $locataire)
                                         <option value="{{ $locataire->id }}">
-                                            {{ $locataire->nom }} {{ $locataire->prenom }} (Tél: {{ $locataire->telephone }})
+                                            {{ implode(' ', array_filter([$locataire->nom, $locataire->postnom, $locataire->prenom])) }} (Tél: {{ $locataire->telephone }})
                                         </option>
                                     @endforeach
                                 </select>

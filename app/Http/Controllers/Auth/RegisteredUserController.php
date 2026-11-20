@@ -33,15 +33,24 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'nom' => ['required', 'string', 'max:80'],
+            'postnom' => ['nullable', 'string', 'max:80'],
+            'prenom' => ['required', 'string', 'max:80'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'telephone' => ['nullable', 'string', 'max:20'], // Attention à bien utiliser 'telephone' comme dans votre formulaire view
+            'profession' => ['nullable', 'string', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         [$user] = DB::transaction(function () use ($request) {
+            $fullName = implode(' ', array_filter([
+                $request->nom,
+                $request->postnom,
+                $request->prenom,
+            ]));
+
             $user = User::create([
-                'name' => $request->name,
+                'name' => $fullName,
                 'email' => $request->email,
                 'phone' => $request->telephone,
                 'role' => User::ROLE_TENANT,
@@ -50,11 +59,12 @@ class RegisteredUserController extends Controller
             ]);
 
             Locataire::create([
-                'nom' => $request->name,
-                'prenom' => '',
+                'nom' => $request->nom,
+                'postnom' => $request->postnom,
+                'prenom' => $request->prenom,
                 'telephone' => $request->telephone ?? '',
                 'email' => $request->email,
-                'profession' => 'Non spécifié',
+                'profession' => $request->input('profession') ?: 'Non spécifié',
             ]);
 
             return [$user];
